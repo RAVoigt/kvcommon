@@ -8,7 +8,6 @@ authors = ["Rob Voigt <code@ravoigt.com>"]
 python = "^3.11"
 toml = "^0.10.2"
 
-
 [tool.poetry.dev-dependencies]
 black = "*"
 ipdb = "*"
@@ -17,6 +16,7 @@ mock = "*"
 pylint = "*"
 pytest = "*"
 pytest-cov = "*"
+pyfakefs = "*"
 
 
 [tool.black]
