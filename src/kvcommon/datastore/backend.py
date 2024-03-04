@@ -9,7 +9,6 @@ import toml
 
 from kvcommon import logger
 
-# from .toml_interface import TOMLInterface
 
 
 LOG = logger.get_logger("kvcommon-datastore")
