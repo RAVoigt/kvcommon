@@ -60,7 +60,7 @@ jobs:
     - build
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: testpypi
       url: https://test.pypi.org/p/kvcommon
     permissions:
       id-token: write
