@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "kvcommon"
+version = "0.0.1"
+description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
+authors = ["Rob Voigt <code@ravoigt.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+toml = "^0.10.2"
+
+
+[tool.poetry.dev-dependencies]
+black = "*"
+ipdb = "*"
+ipython = "*"
+mock = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
+
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
