@@ -88,6 +88,8 @@ class TOMLBackend(DatastoreBackend):
     ) -> None:
         self.USER_DIR = pathlib.Path(storage_dir_path)
         self.USER_CONF_PATH = self.USER_DIR / user_conf_filename
+        if not str(self.USER_CONF_PATH).endswith(".toml"):
+            self.USER_CONF_PATH = self.USER_CONF_PATH.with_suffix('.toml')
 
     @property
     def _data_by_ref(self) -> dict:
