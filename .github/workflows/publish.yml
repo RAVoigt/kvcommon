@@ -1,10 +1,13 @@
 name: "<Publish to PyPI / TestPyPI>"
 
-on: push
+on:
+  push:
+    branches: ["main"]
 
 jobs:
   build:
     name: "[📦 Build dist]"
+    if: startsWith(github.ref, 'refs/tags/') # only publish to PyPI on tag pushes
     runs-on: ubuntu-latest
 
     steps:
