@@ -89,7 +89,7 @@ class TOMLBackend(DatastoreBackend):
         self.USER_DIR = pathlib.Path(storage_dir_path)
         self.USER_CONF_PATH = self.USER_DIR / user_conf_filename
         if not str(self.USER_CONF_PATH).endswith(".toml"):
-            self.USER_CONF_PATH = self.USER_CONF_PATH.with_suffix('.toml')
+            self.USER_CONF_PATH = self.USER_CONF_PATH.with_suffix(".toml")
 
     @property
     def _data_by_ref(self) -> dict:
@@ -120,8 +120,9 @@ class TOMLBackend(DatastoreBackend):
                 toml.dump(data, toml_file)
         except OSError as ex:
             LOG.error(
-                f"Failed to write config to TOML at path: {self.USER_CONF_PATH}, "
-                "full_exception={ex}"
+                "Failed to write config to TOML at path: '%s' - full_exception=%s",
+                self.USER_CONF_PATH,
+                ex,
             )
             raise ex
 
@@ -140,8 +141,9 @@ class TOMLBackend(DatastoreBackend):
                 data: dict = toml.load(self.USER_CONF_PATH)
             except OSError as ex:
                 LOG.error(
-                    f"Failed to load config from TOML at path: {self.USER_CONF_PATH}, "
-                    "full_exception={ex}"
+                    "Failed to load config from TOML at path: '%s' - full_exception=%s",
+                    self.USER_CONF_PATH,
+                    ex,
                 )
                 raise ex
 
