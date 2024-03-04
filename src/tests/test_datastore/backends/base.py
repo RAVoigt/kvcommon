@@ -6,39 +6,32 @@ from kvcommon.datastore.backend import DatastoreBackend
 
 class BackendTestSuite:
 
-
     def test_get_method_without_by_ref(self, backend):
         backend.set("key", "value")
         result = backend.get("key")
         assert result == "value"
-
 
     def test_get_method_with_by_ref(self, backend):
         backend.set("key", "value")
         result = backend.get("key", by_ref=True)
         assert result == "value"
 
-
     def test_get_method_with_default_value(self, backend):
         result = backend.get("nonexistent_key", default="default_value")
         assert result == "default_value"
-
 
     def test_get_method_with_default_value_and_by_ref(self, backend):
         result = backend.get("nonexistent_key", default="default_value", by_ref=True)
         assert result == "default_value"
 
-
     def test_set_method(self, backend):
         backend.set("key", "value")
         assert backend._data_by_ref["key"] == "value"
-
 
     def test_overwrite_data_method(self, backend):
         data = {"key1": "value1", "key2": "value2"}
         backend.overwrite_data(data)
         assert backend._data_by_ref == data
-
 
     def test_update_data_method(self, backend):
         backend.set("key1", "value1")
@@ -46,13 +39,11 @@ class BackendTestSuite:
         expected_data = {"key1": "value1", "key2": "value2", "key3": "value3"}
         assert backend._data_by_ref == expected_data
 
-
     def test_data_copy_immutability(self, backend):
         backend.set("key", "value")
         data_copy = backend._data
         backend.set("key", "new_value")
         assert data_copy["key"] == "value"
-
 
     # def test_abstract_methods_raise_not_implemented_error():
     #     abstract_backend = DatastoreBackend()
@@ -66,12 +57,10 @@ class BackendTestSuite:
     #     with pytest.raises(NotImplementedError, match=".*overwrite_data.*"):
     #         abstract_backend.overwrite_data({"key": "value"})
 
-
     def test_set_method_overwrites_existing_value(self, backend):
         backend.set("key", "value")
         backend.set("key", "new_value")
         assert backend._data_by_ref["key"] == "new_value"
-
 
     def test_set_method_with_special_characters(self, backend):
         key = "!@#$%^&*()"
@@ -79,27 +68,22 @@ class BackendTestSuite:
         backend.set(key, value)
         assert backend._data_by_ref[key] == value
 
-
     def test_update_data_method_with_empty_dict(self, backend):
         backend.set("key1", "value1")
         backend.update_data()
         assert backend._data_by_ref == {"key1": "value1"}
 
-
     def test_get_method_with_empty_data(self, backend):
         result = backend.get("nonexistent_key")
         assert result is None
-
 
     def test_get_method_with_empty_data_and_default_value(self, backend):
         result = backend.get("nonexistent_key", default="default_value")
         assert result == "default_value"
 
-
     def test_get_method_with_empty_data_and_by_ref(self, backend):
         result = backend.get("nonexistent_key", by_ref=True)
         assert result is None
-
 
     def test_get_method_with_empty_data_and_default_value_and_by_ref(self, backend):
         result = backend.get("nonexistent_key", default="default_value", by_ref=True)

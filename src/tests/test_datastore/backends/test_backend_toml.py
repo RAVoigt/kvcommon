@@ -9,7 +9,6 @@ from kvcommon.datastore.backend import TOMLBackend
 from .test_backend_dict import BackendTestSuite
 
 
-
 @pytest.fixture
 def backend():
     patcher = Patcher()

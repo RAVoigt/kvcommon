@@ -1,5 +1,6 @@
 import typing as t
 
+
 def to_bool(val: None | bool | int | float | str) -> bool:
     if val is None:
         return False
