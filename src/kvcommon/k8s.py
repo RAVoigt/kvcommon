@@ -22,7 +22,7 @@ class KubernetesException(KVCException):
     pass
 
 
-def get_k8s_secret(secret_name: str, namespace: str = "kong"):
+def get_k8s_secret(secret_name: str, namespace: str):
     """
     Returns a 'v1Secret' struct from kubernetes library
 
@@ -65,10 +65,7 @@ def get_secret_strings(secret) -> dict:
     return data_dict
 
 
-def get_decoded_k8s_secret(
-    secret_name: str,
-    namespace: str = "kong",
-) -> dict:
+def get_decoded_k8s_secret(secret_name: str, namespace: str) -> dict:
     """
     Gets a 'v1Secret' struct from kubernetes and decodes
 
