@@ -11,7 +11,7 @@ from kvcommon import logger
 
 
 
-LOG = logger.get_logger("kvcommon-datastore")
+LOG = logger.get_logger("kvc-ds")
 
 
 class DatastoreBackend(ABC):
