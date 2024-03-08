@@ -1,10 +1,27 @@
 [tool.poetry]
 name = "kvcommon"
-version = "0.0.6"
+version = "0.0.7"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
 authors = ["Rob Voigt <code@ravoigt.com>"]
 readme = "README.md"
 
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project.urls]
+Homepage = "https://github.com/RAVoigt/kvcommon"
+Repository = "https://github.com/RAVoigt/kvcommon"
+
+# ================================
+# Tools etc.
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+
+# ================================
+# Dependencies
 [tool.poetry.dependencies]
 python = "^3.11"
 toml = "^0.10.2"
@@ -19,12 +36,7 @@ pytest = "*"
 pytest-cov = "*"
 pyfakefs = "*"
 
+# kubernetes = "*"
 
-[tool.black]
-line-length = 100
-target-version = ['py311']
-include = '\.pyi?$'
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry.extras]
+k8s = ["kubernetes"]

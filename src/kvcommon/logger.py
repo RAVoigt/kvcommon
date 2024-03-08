@@ -13,6 +13,7 @@ def get_logger(
     console_log_level=logging.DEBUG,
     logging_format_string: str = logging_format_string,
     logging_format_time: str = logging_format_time,
+    filters: t.Iterable[logging.Filter] | None = None
 ):
     logger = logging.getLogger(name=name)
     logger.setLevel(console_log_level)
@@ -23,5 +24,9 @@ def get_logger(
     ch.setLevel(console_log_level)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
+
+    if filters is not None:
+        for filter in filters:
+            logger.addFilter(filter)
 
     return logger
