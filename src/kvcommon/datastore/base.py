@@ -6,7 +6,7 @@ from kvcommon import logger
 from .backend import DatastoreBackend
 
 
-LOG = logger.get_logger("iaptoolkit-datastore")
+LOG = logger.get_logger("kvc-ds")
 
 
 class VersionedDatastore(object):

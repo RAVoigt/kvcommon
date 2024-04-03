@@ -1,0 +1,3 @@
+
+class KVCException(Exception):
+    pass
