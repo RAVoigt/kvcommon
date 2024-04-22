@@ -6,8 +6,7 @@ from kvcommon.logger import get_logger
 logger = get_logger("KVC")
 
 
-def shell_cmd(cmd: str) -> str:
-    # logger.debug('Subprocess: "' + cmd + '"')
+def shell_cmd(cmd: str, raise_exceptions: bool = False) -> str:
     try:
         command_line_process = subprocess.Popen(
             cmd,
@@ -27,4 +26,6 @@ def shell_cmd(cmd: str) -> str:
 
     except (OSError, subprocess.CalledProcessError) as ex:
         logger.error("Exception occured: " + str(ex))
+        if raise_exceptions:
+            raise(ex)
         return str(ex)
