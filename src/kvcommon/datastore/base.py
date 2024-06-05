@@ -36,7 +36,7 @@ class VersionedDatastore(object):
         return self.get_data_version(allow_none=True) == self._config_version
 
     def _migrate_version(self):
-        LOG.info("New config version detected. Migrating.")
+        LOG.debug("New config version detected. Migrating.")
         # ...
         # Subclasses should super() call this method after migrating data
         # ...

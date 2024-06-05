@@ -2,121 +2,66 @@ import pytest
 from kvcommon.types import to_bool
 
 
-def test_none_returns_false():
-    result = to_bool(None)
-    assert result is False
+def test_to_bool_none():
+    assert to_bool(None) == False
 
 
-def test_bool_returns_itself():
-    result = to_bool(True)
-    assert result is True
+def test_to_bool_boolean():
+    assert to_bool(True) == True
+    assert to_bool(False) == False
 
 
-def test_zero_int_returns_false():
-    result = to_bool(0)
-    assert result is False
+def test_to_bool_integer():
+    assert to_bool(1) == True
+    assert to_bool(0) == False
+    assert to_bool(-1) == True
+    assert to_bool(100) == True
 
 
-def test_nonzero_int_returns_true():
-    result = to_bool(42)
-    assert result is True
+def test_to_bool_float():
+    assert to_bool(1.0) == True
+    assert to_bool(0.0) == False
+    assert to_bool(-1.0) == True
+    assert to_bool(0.5) == True
 
 
-def test_zero_float_returns_false():
-    result = to_bool(0.0)
-    assert result is False
+def test_to_bool_string_true_values():
+    assert to_bool("true") == True
+    assert to_bool("True") == True
+    assert to_bool("trUe") == True
+    assert to_bool(" yes ") == True
+    assert to_bool("Y") == True
+    assert to_bool("y") == True
+    assert to_bool("1") == True
 
 
-def test_nonzero_float_returns_true():
-    result = to_bool(0.1)
-    assert result is True
+def test_to_bool_string_false_values():
+    assert to_bool("false") == False
+    assert to_bool("False") == False
+    assert to_bool("falSe") == False
+    assert to_bool(" no ") == False
+    assert to_bool("N") == False
+    assert to_bool("n") == False
+    assert to_bool("0") == False
+    assert to_bool("") == False
+    assert to_bool("   ") == False
 
 
-def test_true_string_returns_true():
-    result = to_bool("true")
-    assert result is True
+def test_to_bool_invalid_string():
+    with pytest.raises(ValueError) as exc_info:
+        to_bool("invalid")
+    assert str(exc_info.value) == "Unable to coerce value to boolean: invalid"
+
+    with pytest.raises(ValueError) as exc_info:
+        to_bool("maybe")
+    assert str(exc_info.value) == "Unable to coerce value to boolean: maybe"
 
 
-def test_true_string_case_insensitive_returns_true():
-    result = to_bool("True")
-    assert result is True
+def test_to_bool_invalid_type():
+    with pytest.raises(ValueError) as exc_info:
+        to_bool([1, 2, 3])  # type: ignore
+    assert str(exc_info.value) == "Unable to coerce value to boolean: [1, 2, 3]"
 
-
-def test_yes_string_returns_true():
-    result = to_bool("yes")
-    assert result is True
-
-
-def test_yes_string_case_insensitive_returns_true():
-    result = to_bool("YES")
-    assert result is True
-
-
-def test_y_string_returns_true():
-    result = to_bool("y")
-    assert result is True
-
-
-def test_y_string_case_insensitive_returns_true():
-    result = to_bool("Y")
-    assert result is True
-
-
-def test_one_string_returns_true():
-    result = to_bool("1")
-    assert result is True
-
-
-def test_false_string_returns_false():
-    result = to_bool("false")
-    assert result is False
-
-
-def test_false_string_case_insensitive_returns_false():
-    result = to_bool("False")
-    assert result is False
-
-
-def test_no_string_returns_false():
-    result = to_bool("no")
-    assert result is False
-
-
-def test_no_string_case_insensitive_returns_false():
-    result = to_bool("NO")
-    assert result is False
-
-
-def test_n_string_returns_false():
-    result = to_bool("n")
-    assert result is False
-
-
-def test_n_string_case_insensitive_returns_false():
-    result = to_bool("N")
-    assert result is False
-
-
-def test_zero_string_returns_false():
-    result = to_bool("0")
-    assert result is False
-
-
-def test_empty_string_returns_false():
-    result = to_bool("")
-    assert result is False
-
-
-def test_whitespace_string_returns_false():
-    result = to_bool("   ")
-    assert result is False
-
-
-def test_invalid_string_raises_value_error():
-    with pytest.raises(ValueError):
-        to_bool("f")
-
-
-def test_unsupported_type_raises_value_error():
-    with pytest.raises(ValueError):
-        to_bool(print)  # type: ignore
+    with pytest.raises(ValueError) as exc_info:
+        to_bool({"key": "value"})  # type: ignore
+    assert str(exc_info.value) == "Unable to coerce value to boolean: {'key': 'value'}"
