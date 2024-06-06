@@ -1,11 +1,8 @@
 import logging
 import typing as t
 
-from .vars import KVC_LOG_DATEFMT
-from .vars import KVC_LOG_FORMAT
-
-logging_format_string = KVC_LOG_FORMAT or "%(asctime)s - [%(levelname)s] - %(name)s - %(message)s"
-logging_format_time = KVC_LOG_DATEFMT or "[%Y-%m-%d %H:%M:%S]"
+logging_format_string = "%(asctime)s - [%(levelname)s] - [%(name)s] - %(message)s"
+logging_format_time = "[%Y-%m-%d %H:%M:%S]"
 
 
 def get_logger(
