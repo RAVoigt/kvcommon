@@ -16,6 +16,10 @@ def get_logger(
     filters: t.Iterable[logging.Filter] | None = None
 ):
     logger = logging.getLogger(name=name)
+
+    if logger.hasHandlers():
+        return logger
+
     logger.setLevel(console_log_level)
 
     formatter = logging.Formatter(logging_format_string, logging_format_time)
