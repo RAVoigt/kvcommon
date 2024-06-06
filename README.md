@@ -14,13 +14,6 @@ https://pypi.org/project/kvcommon/
 ### With pip:
 `pip install kvcommon`
 
-## Configuration & Env Vars
-
-| Env Var | Default|Description|
-|---|---|---|
-|`KVC_LOG_FORMAT`|`"%(asctime)s - [%(levelname)s] - %(name)s - %(message)s"`|Sets log format for internal logger|
-|`KVC_LOG_DATEFMT`|`"%Y-%m-%d %H:%M:%S"`|Sets log datetime format for internal logger|
-
 ## Packages/Modules
 
 | Package | Description | Example Usage |
@@ -30,3 +23,4 @@ https://pypi.org/project/kvcommon/
 |`logger`|Boilerplate wrapper to get logger with formatting|`from kvcommon import logger as LOG; LOG.get_logger("logger_name")`|
 |`misc`|Obligatory 'misc'
 |`types`|Miscellaneous utils for either converting types or type-hinting|`from kvcommon import types; types.to_bool("false")`|
+|`urls`|Convenience wrappers for URL parsing|`from kvcommon import types; types.to_bool("false")`|
