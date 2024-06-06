@@ -4,6 +4,16 @@ Library of miscellaneous common python utils that aren't worthy of their own ded
 
 This library isn't likely to be useful to anyone else; it's just a convenience to save me from copy/pasting between various projects I work on.
 
+# PyPi
+https://pypi.org/project/kvcommon/
+
+# Installation
+### With Poetry:
+`poetry add kvcommon`
+
+### With pip:
+`pip install kvcommon`
+
 ## Configuration & Env Vars
 
 | Env Var | Default|Description|
