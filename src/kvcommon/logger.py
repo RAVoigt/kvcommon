@@ -1,7 +1,7 @@
 import logging
 import typing as t
 
-logging_format_string = "%(asctime)s - [%(levelname)s] - [%(name)s]: %(message)s"
+logging_format_string = "%(asctime)s - [%(levelname)8s] - [%(name)12s]: %(message)s"
 logging_format_time = "[%Y-%m-%d %H:%M:%S]"
 
 

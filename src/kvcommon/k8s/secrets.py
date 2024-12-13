@@ -1,19 +1,12 @@
 import base64
 import binascii
 
-try:
-    from kubernetes import client
-    from kubernetes import config
-
-except ImportError:
-    # TODO: Improve handling of kubernetes as an optional dep
-    # kubernetes = None
-    # client = None
-    # config = None
-    pass
+from kubernetes import client
+from kubernetes import config
 
 from kvcommon.exceptions import KVCException
 from kvcommon.logger import get_logger
+
 
 LOG = get_logger("kvc-k8s")
 
