@@ -5,6 +5,7 @@ import typing as t
 from .. import K8sException
 from . import K8sSerializable
 from .metadata import Metadata
+from .. import InvalidDataException
 
 
 from kvcommon.logger import get_logger
@@ -37,14 +38,19 @@ class K8sObject(K8sSerializable):
     _status: K8sObjectStatus
     _is_namespaced: bool = True
 
+    _expected_kind: str | None = None
+
     def __init__(self, serialized: str, deserialized: dict) -> None:
         super().__init__(serialized=serialized, deserialized=deserialized)
 
         self._api_version = deserialized.get("api_version", None)
-        self._kind = deserialized.get("kind", None)
         self._metadata = Metadata.from_dict(deserialized.get("metadata", {}))
         self._spec = K8sObjectSpec.from_dict(deserialized.get("spec", {}))
         self._status = deserialized.get("status", {})
+        self._kind = deserialized.get("kind", None)
+        if self._expected_kind is not None:
+            if self._kind != self._expected_kind:
+                raise InvalidDataException(f"Input data has wrong 'Kind' for {self.__class__.__name__}")
 
     def __repr__(self):
         return f"<{self.__class__.__name__}: ns:'{self.namespace}' | name:'{self.name}'"

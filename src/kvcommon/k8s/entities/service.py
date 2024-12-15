@@ -186,6 +186,7 @@ class Service_Annotation_NEG(K8sSerializable):
 
 
 class Service(K8sObject):
+    _expected_kind = "Service"
     _spec: Spec_Service
     _status: Status_Service
 
@@ -195,8 +196,8 @@ class Service(K8sObject):
         self._status = Status_Service.from_dict(deserialized.get("status", {}))
 
     @classmethod
-    def from_model(cls, service: V1Service) -> t.Self:
-        return cls.from_dict(service.to_dict())
+    def from_model(cls, model: V1Service) -> t.Self:
+        return cls.from_dict(model.to_dict())
 
     @property
     def backend_config_annotation(self) -> Service_Annotation_BackendConfig:

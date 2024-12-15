@@ -262,6 +262,7 @@ Ingress
 
 
 class Ingress(K8sObject):
+    _expected_kind = "Ingress"
     _spec: Spec_Ingress
     _status: Status_Ingress
 
@@ -271,8 +272,8 @@ class Ingress(K8sObject):
         self._status = Status_Ingress.from_dict(deserialized.get("status", {}))
 
     @classmethod
-    def from_model(cls, ingress: V1Ingress) -> t.Self:
-        return cls.from_dict(ingress.to_dict())
+    def from_model(cls, model: V1Ingress) -> t.Self:
+        return cls.from_dict(model.to_dict())
 
     @property
     def rules(self) -> list[IngressRule]:
