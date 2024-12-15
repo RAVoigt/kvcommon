@@ -50,7 +50,9 @@ class K8sObject(K8sSerializable):
         self._kind = deserialized.get("kind", None)
         if self._expected_kind is not None:
             if self._kind != self._expected_kind:
-                raise InvalidDataException(f"Input data has wrong 'Kind' for {self.__class__.__name__}")
+                raise InvalidDataException(
+                    f"Input data has wrong 'Kind' for {self.__class__.__name__}"
+                )
 
     def __repr__(self):
         return f"<{self.__class__.__name__}: ns:'{self.namespace}' | name:'{self.name}'"

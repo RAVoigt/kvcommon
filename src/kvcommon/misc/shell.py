@@ -27,5 +27,5 @@ def shell_cmd(cmd: str, raise_exceptions: bool = False) -> str:
     except (OSError, subprocess.CalledProcessError) as ex:
         logger.error("Exception occured: " + str(ex))
         if raise_exceptions:
-            raise(ex)
+            raise ex
         return str(ex)

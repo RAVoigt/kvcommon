@@ -17,13 +17,14 @@ class NamespacedObject(NamedObject):
     namespace: str
 
 
-ObjectType  = TypeVar("ObjectType")
+ObjectType = TypeVar("ObjectType")
 
 
 class ObjectStore(Generic[ObjectType]):
     """
     Simple type-able object store
     """
+
     type_var: Type[ObjectType]
     objects: dict[str, ObjectType]
 
@@ -47,6 +48,7 @@ class SerializableObject:
     """
     Generic serializable object that holds both its serialized JSON form and its python obj form (dict)
     """
+
     _serialized: str
     _deserialized: dict
 
@@ -78,7 +80,4 @@ class SerializableObject:
         return self._deserialized.copy()
 
     def copy(self) -> Self:
-        return self.__class__(
-            serialized=self._serialized,
-            deserialized=self._deserialized
-        )
+        return self.__class__(serialized=self._serialized, deserialized=self._deserialized)
