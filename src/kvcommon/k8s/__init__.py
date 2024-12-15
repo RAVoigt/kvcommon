@@ -1,11 +1,13 @@
 from __future__ import annotations
-from abc import ABC
-from abc import abstractmethod
+
 from typing import Generic
+from typing import Type
 from typing import TypeVar
 
 from kvcommon.exceptions import DependencyException
 from kvcommon.exceptions import KVCException
+
+from kvcommon.misc.entities import NamedObject
 
 try:
     import kubernetes
@@ -18,13 +20,17 @@ class K8sException(KVCException):
     pass
 
 
+class InvalidDataException(K8sException):
+    pass
 
-ApiCls  = TypeVar("ApiCls")
+
+ApiCls = TypeVar("ApiCls")
+
 
 class K8sClientBase(Generic[ApiCls]):
     _config_loaded: bool = False
     _in_cluster: bool = True
-    _api_cls = None
+    _api_cls: Type[ApiCls]
     _api: ApiCls
 
     def __init__(self, in_cluster: bool = True) -> None:

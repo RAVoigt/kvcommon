@@ -4,3 +4,4 @@ __pycache__/
 *.log
 *.code-workspace
 *.vscode/
+__scratch/
