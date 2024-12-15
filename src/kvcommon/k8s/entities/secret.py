@@ -7,10 +7,6 @@ from kubernetes.client.models.v1_secret import V1Secret
 
 from .. import K8sException
 from .base import K8sObject
-from .base import K8sObjectSpec
-from .base import K8sObjectStatus
-from .base import K8sSerializable
-from .ingress import IngressLoadBalancer
 
 from kvcommon.types import to_bool
 from kvcommon.logger import get_logger

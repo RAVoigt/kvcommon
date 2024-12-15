@@ -1,12 +1,8 @@
-import dataclasses
-import kubernetes
-
 from kubernetes.client import NetworkingV1Api
 from kubernetes.client.exceptions import ApiException
 from kubernetes.client.models.v1_ingress import V1Ingress
 from kubernetes.client.models.v1_ingress_list import V1IngressList
 
-from kvcommon.logger import get_logger
 from .. import K8sException
 from .. import K8sClientBase
 from ..entities.backendconfig import BackendConfig
@@ -16,6 +12,8 @@ from ..entities.service import Service
 from .core import K8sCoreClient
 from .custom_objects import K8sCustomObjectsClient
 
+
+from kvcommon.logger import get_logger
 
 LOG = get_logger("kvc-k8s")
 
