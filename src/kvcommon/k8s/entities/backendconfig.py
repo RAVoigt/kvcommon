@@ -83,6 +83,7 @@ class Spec_BackendConfig(K8sObjectSpec):
 
 
 class BackendConfig(K8sObject):
+    _expected_kind = "BackendConfig"
     _spec: Spec_BackendConfig
 
     def __init__(self, serialized: str, deserialized: dict) -> None:

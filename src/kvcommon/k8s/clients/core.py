@@ -3,6 +3,7 @@ import kubernetes
 
 from kubernetes.client import CoreV1Api
 from kubernetes.client.exceptions import ApiException
+from kubernetes.client.models.v1_secret import V1Secret
 from kubernetes.client.models.v1_service import V1Service
 from kubernetes.client.models.v1_service_list import V1ServiceList
 
@@ -10,6 +11,7 @@ from kvcommon.logger import get_logger
 from .. import K8sException
 from .. import K8sClientBase
 from ..entities.ingress import Ingress
+from ..entities.secret import Secret
 from ..entities.service import Service
 
 
@@ -24,6 +26,8 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
     """
 
     _api_cls = CoreV1Api
+
+    # ==== Services
 
     def get_namespaced_service(self, namespace: str, service_name: str) -> V1Service:
         # Typechecked wrapper
@@ -74,3 +78,24 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
             if svc is not None:
                 services.append(svc)
         return services
+
+    # ==== Secrets
+
+    def get_namespaced_secret(self, namespace: str, name: str) -> V1Secret:
+        # Typechecked wrapper
+        secret = self._api.read_namespaced_secret(name=name, namespace=namespace)
+        if not isinstance(secret, V1Secret):
+            raise K8sException(
+                f"Failed to retrieve Secret with name: '{name}' in namespace: '{namespace}' "
+                f"(Got obj of type: '{type(secret)}')"
+            )
+        return secret
+
+    def get_secret(self, namespace: str, name: str) -> Secret | None:
+        try:
+            v1secret: V1Secret = self.get_namespaced_secret(namespace=namespace, name=name)
+            if v1secret is not None:
+                return Secret.from_model(v1secret)
+        except (ApiException, K8sException) as ex:
+            LOG.warning(f"Error retrieving Secret: {ex}")
+        return None
