@@ -1,17 +1,15 @@
 from __future__ import annotations
 
 from datetime import datetime
-import dataclasses
-import json
 import typing as t
 
 from kubernetes.client.models.v1_object_meta import V1ObjectMeta
 
-from .. import InvalidDataException
+from kvcommon.exceptions import InvalidDataException
+
 from .base import K8sSerializable
 
 from kvcommon.logger import get_logger
-
 
 LOG = get_logger("kvc-k8s")
 

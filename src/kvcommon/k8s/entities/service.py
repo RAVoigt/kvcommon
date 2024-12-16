@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import dataclasses
-import json
 import typing as t
 
 from kubernetes.client.models.v1_service import V1Service
@@ -13,7 +11,6 @@ from .base import K8sSerializable
 from .ingress import IngressLoadBalancer
 
 from kvcommon.logger import get_logger
-
 
 LOG = get_logger("kvc-k8s")
 
@@ -39,21 +36,6 @@ class Status_Service(K8sObjectStatus):
     @property
     def conditions(self) -> t.Any:
         return self._deserialized.get("conditions", None)
-
-
-# class Spec_BackendConfig_IAP(K8sSerializable):
-
-#     @property
-#     def enabled(self) -> str | None:
-#         return self._deserialized.get("enabled", None)
-
-#     @property
-#     def oauthclientCredentials(self) -> dict:
-#         return self._deserialized.get("oauthclientCredentials", None)
-
-#     @property
-#     def oauthclientCredentials_secretName(self) -> str | None:
-#         return self.oauthclientCredentials.get("secretName", None)
 
 
 class ServicePort(K8sSerializable):

@@ -13,7 +13,6 @@ from .base import K8sSerializable
 
 from kvcommon.logger import get_logger
 
-
 LOG = get_logger("kvc-k8s")
 
 
@@ -246,19 +245,6 @@ class Spec_Ingress(K8sObjectSpec):
 class Ingress_Annotation_Backend:
     name: str
     status: str
-
-
-"""
-Ingress
-    Spec_Ingress
-        IngressRule
-            IngressPath
-                IngressBackend
-                    IngressBackend_Resource
-                    IngressBackend_Service
-    Status_Ingress
-        IngressLoadBalancer
-"""
 
 
 class Ingress(K8sObject):
