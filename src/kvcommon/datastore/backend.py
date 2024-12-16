@@ -10,7 +10,6 @@ import toml
 from kvcommon import logger
 
 
-
 LOG = logger.get_logger("kvc-ds")
 
 

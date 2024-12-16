@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "kvcommon"
-version = "0.1.4"
+version = "0.2.0"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
 authors = ["Rob Voigt <code@ravoigt.com>"]
 readme = "README.md"
+license = "MIT"
+repository = "https://github.com/RAVoigt/kvcommon"
+homepage = "https://github.com/RAVoigt/kvcommon"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -35,6 +38,7 @@ pylint = "*"
 pytest = "*"
 pytest-cov = "*"
 pyfakefs = "*"
+kubernetes = "*"
 
 # kubernetes = "*"
 
