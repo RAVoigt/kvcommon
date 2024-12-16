@@ -1,4 +1,3 @@
-
 def headers_dict_to_flask_headers(headers: dict) -> list:
     """
     The requests lib typically handles headers in a dict-like structure.

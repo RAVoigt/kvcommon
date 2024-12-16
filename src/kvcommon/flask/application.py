@@ -4,6 +4,7 @@ from __future__ import annotations
 import typing as t
 
 from flask import Flask
+
 # from flask_cors import CORS # TODO
 from flask_http_middleware import MiddlewareManager
 
@@ -12,14 +13,13 @@ from flask_http_middleware import BaseHTTPMiddleware
 from kvcommon_flask.middleware import KVCFlaskMiddleware
 
 
-
 LOG = get_logger("application")
 
 
 def create_app_with_middleware(
-        middleware: BaseHTTPMiddleware | KVCFlaskMiddleware | None = None,
-        flask_secret_key: str | None = None
-    ) -> Flask:
+    middleware: BaseHTTPMiddleware | KVCFlaskMiddleware | None = None,
+    flask_secret_key: str | None = None,
+) -> Flask:
     flask_app = Flask(__name__)
 
     if middleware is not None:
