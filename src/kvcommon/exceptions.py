@@ -12,3 +12,7 @@ class K8sException(KVCException):
 
 class InvalidDataException(K8sException):
     pass
+
+
+class KVCFlaskException(KVCException):
+    pass

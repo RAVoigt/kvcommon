@@ -4,10 +4,10 @@ from prometheus_client import Histogram
 from prometheus_client import Info
 from prometheus_client import Summary
 
-from kvcommon_flask.exceptions import KVCFlaskException
+from kvcommon.exceptions import KVCFlaskException
 
 
-class MetricsException(KVCFlaskException):
+class FlaskMetricsException(KVCFlaskException):
     pass
 
 
