@@ -4,7 +4,7 @@ import typing as t
 
 from .base import K8sObject
 from .base import K8sObjectSpec
-from .base import K8sSerializable
+from .serializable import K8sSerializable
 
 from kvcommon.types import to_bool
 from kvcommon.logger import get_logger

@@ -7,8 +7,8 @@ from kubernetes.client.models.v1_service import V1Service
 from .base import K8sObject
 from .base import K8sObjectSpec
 from .base import K8sObjectStatus
-from .base import K8sSerializable
 from .ingress import IngressLoadBalancer
+from .serializable import K8sSerializable
 
 from kvcommon.logger import get_logger
 

@@ -5,10 +5,10 @@ from kubernetes.client.models.v1_service import V1Service
 from kubernetes.client.models.v1_service_list import V1ServiceList
 
 from kvcommon.exceptions import K8sException
-from kvcommon.k8s.clients import K8sClientBase
 from kvcommon.k8s.entities.ingress import Ingress
 from kvcommon.k8s.entities.secret import Secret
 from kvcommon.k8s.entities.service import Service
+from .base import K8sClientBase
 
 from kvcommon.logger import get_logger
 
