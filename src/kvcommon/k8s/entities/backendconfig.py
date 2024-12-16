@@ -1,18 +1,13 @@
 from __future__ import annotations
 
-import dataclasses
-import json
 import typing as t
 
 from .base import K8sObject
 from .base import K8sObjectSpec
-
-# from .base import K8sObjectStatus
 from .base import K8sSerializable
 
 from kvcommon.types import to_bool
 from kvcommon.logger import get_logger
-
 
 LOG = get_logger("kvc-k8s")
 

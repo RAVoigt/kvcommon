@@ -1,13 +1,15 @@
 from kubernetes.client import CustomObjectsApi
 from kubernetes.client.exceptions import ApiException
 
-from kvcommon.logger import get_logger
-from .. import K8sException
-from .. import K8sClientBase
-from ..entities.ingress import Ingress
-from ..entities.service import Service
-from ..entities.backendconfig import BackendConfig
+from kvcommon.exceptions import K8sException
+from kvcommon.k8s.clients import K8sClientBase
+from kvcommon.k8s.entities.ingress import Ingress
+from kvcommon.k8s.entities.service import Service
+from kvcommon.k8s.entities.backendconfig import BackendConfig
+
 from .core import K8sCoreClient
+
+from kvcommon.logger import get_logger
 
 LOG = get_logger("kvc-k8s")
 

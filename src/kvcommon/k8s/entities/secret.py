@@ -5,12 +5,13 @@ import typing as t
 
 from kubernetes.client.models.v1_secret import V1Secret
 
-from .. import K8sException
+from kvcommon.exceptions import K8sException
+from kvcommon.types import to_bool
+
 from .base import K8sObject
 
-from kvcommon.types import to_bool
-from kvcommon.logger import get_logger
 
+from kvcommon.logger import get_logger
 
 LOG = get_logger("kvc-k8s")
 
