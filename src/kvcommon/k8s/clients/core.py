@@ -31,7 +31,7 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     def get_namespaced_service(self, namespace: str, service_name: str) -> V1Service:
         # Typechecked wrapper
-        service = self._api.read_namespaced_service(name=service_name, namespace=namespace)
+        service = self.api.read_namespaced_service(name=service_name, namespace=namespace)
         if not isinstance(service, V1Service):
             raise K8sException(
                 f"Failed to retrieve Service with name: '{service_name}' in namespace: '{namespace}' "
@@ -50,7 +50,7 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     def list_namespaced_services(self, namespace: str) -> V1ServiceList | None:
         # Typechecked wrapper
-        service_list = self._api.list_namespaced_service(namespace=namespace)
+        service_list = self.api.list_namespaced_service(namespace=namespace)
         if not isinstance(service_list, V1ServiceList):
             raise K8sException(
                 f"Failed to retrieve Service list in namespace: '{namespace}' "
@@ -83,7 +83,7 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     def get_namespaced_secret(self, namespace: str, name: str) -> V1Secret:
         # Typechecked wrapper
-        secret = self._api.read_namespaced_secret(name=name, namespace=namespace)
+        secret = self.api.read_namespaced_secret(name=name, namespace=namespace)
         if not isinstance(secret, V1Secret):
             raise K8sException(
                 f"Failed to retrieve Secret with name: '{name}' in namespace: '{namespace}' "
@@ -93,9 +93,43 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     def get_secret(self, namespace: str, name: str) -> Secret | None:
         try:
-            v1secret: V1Secret = self.get_namespaced_secret(namespace=namespace, name=name)
+            v1secret: V1Secret = self.get_namespaced_secret(
+                namespace=namespace,
+                name=name,
+            )
             if v1secret is not None:
                 return Secret.from_model(v1secret)
         except (ApiException, K8sException) as ex:
             LOG.warning(f"Error retrieving Secret: {ex}")
+        return None
+
+    def create_secret(self, secret: Secret):
+        try:
+            self.api.create_namespaced_secret(
+                namespace=secret.namespace,
+                body=secret.to_model(),
+            )
+        except (ApiException, K8sException) as ex:
+            LOG.warning(f"Error creating Secret: {ex}")
+        return None
+
+    def replace_secret(self, secret: Secret):
+        try:
+            self.api.replace_namespaced_secret(
+                name=secret.name,
+                namespace=secret.namespace,
+                body=secret.to_model(),
+            )
+        except (ApiException, K8sException) as ex:
+            LOG.warning(f"Error replacing Secret: {ex}")
+        return None
+
+    def delete_secret(self, secret: Secret):
+        try:
+            self.api.delete_namespaced_secret(
+                name=secret.name,
+                namespace=secret.namespace,
+            )
+        except (ApiException, K8sException) as ex:
+            LOG.warning(f"Error deleting Secret: {ex}")
         return None

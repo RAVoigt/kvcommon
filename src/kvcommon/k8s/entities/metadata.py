@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from datetime import datetime
 import dataclasses
 import json
 import typing as t
+
+from kubernetes.client.models.v1_object_meta import V1ObjectMeta
 
 from .. import InvalidDataException
 from .base import K8sSerializable
@@ -27,6 +30,13 @@ class Metadata(K8sSerializable):
     def __repr__(self):
         return f"<Metadata: ns:'{self.namespace}' | name:'{self.name}'"
 
+    @classmethod
+    def from_model(cls, model: V1ObjectMeta) -> t.Self:
+        return cls.from_dict(model.to_dict())
+
+    def to_model(self) -> V1ObjectMeta:
+        return V1ObjectMeta(**self._deserialized)
+
     @property
     def name(self) -> str:
         return self._get_essential_str("name")
@@ -42,6 +52,14 @@ class Metadata(K8sSerializable):
     @property
     def annotations(self) -> dict:
         return self._deserialized.get("annotations", {})
+
+    @property
+    def creation_timestamp(self) -> datetime | None:
+        datetime_str = self._deserialized.get(
+            "creation_timestamp",
+        )
+        if datetime_str is not None:
+            return datetime.fromisoformat(datetime_str)
 
     @property
     def labels(self) -> dict:
