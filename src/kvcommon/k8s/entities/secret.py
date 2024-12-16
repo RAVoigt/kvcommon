@@ -29,6 +29,9 @@ class Secret(K8sObject):
     def from_model(cls, model: V1Secret) -> t.Self:
         return cls.from_dict(model.to_dict())
 
+    def to_model(self) -> V1Secret:
+        return V1Secret(**self._deserialized)
+
     @property
     def type(self) -> str:
         return self._get_essential_str("type")

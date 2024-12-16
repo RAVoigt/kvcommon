@@ -25,7 +25,7 @@ class K8sCustomObjectsClient(K8sClientBase[CustomObjectsApi]):
 
         # Retrieve the BackendConfig
         try:
-            backend_config = self._api.get_namespaced_custom_object(
+            backend_config = self.api.get_namespaced_custom_object(
                 group="cloud.google.com",
                 version="v1",
                 namespace=namespace,

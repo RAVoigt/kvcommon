@@ -29,7 +29,7 @@ class K8sNetworkingClient(K8sClientBase[NetworkingV1Api]):
 
     def get_namespaced_ingress(self, namespace: str, ingress_name: str) -> V1Ingress:
         # Typechecked wrapper
-        ingress = self._api.read_namespaced_ingress(name=ingress_name, namespace=namespace)
+        ingress = self.api.read_namespaced_ingress(name=ingress_name, namespace=namespace)
         if not isinstance(ingress, V1Ingress):
             raise K8sException(
                 f"Failed to retrieve Ingress with name: '{ingress_name}' in namespace: '{namespace}' "
@@ -48,7 +48,7 @@ class K8sNetworkingClient(K8sClientBase[NetworkingV1Api]):
 
     def list_namespaced_ingress(self, namespace: str) -> V1IngressList:
         # Typechecked wrapper
-        ingress_list = self._api.list_namespaced_ingress(namespace=namespace)
+        ingress_list = self.api.list_namespaced_ingress(namespace=namespace)
         if not isinstance(ingress_list, V1IngressList):
             raise K8sException(
                 f"Failed to retrieve Ingress list in namespace: '{namespace}' "
