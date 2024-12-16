@@ -6,7 +6,7 @@ from apscheduler.events import EVENT_JOB_ERROR
 from apscheduler.events import EVENT_JOB_EXECUTED
 from apscheduler.events import EVENT_JOB_MISSED
 from apscheduler.events import JobExecutionEvent
-from kvcommon_flask import metrics
+from kvcommon.flask import metrics
 from kvcommon.logger import get_logger
 
 
