@@ -3,7 +3,7 @@ from __future__ import annotations
 from kvcommon.exceptions import DependencyException
 
 try:
-    import kubernetes
+    import flask
 
 except ImportError:
-    raise DependencyException("KVCommon: Must specify 'k8s' extra to use kubernetes features.")
+    raise DependencyException("KVCommon: Must specify 'flask' extra to use flask features.")
