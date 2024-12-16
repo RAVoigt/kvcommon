@@ -1,6 +1,6 @@
 from flask.wrappers import Response as Flask_Response
 
-from kvcommon_flask import metrics
+from kvcommon.flask import metrics
 
 
 class HTTPResponse(Flask_Response):
@@ -39,7 +39,7 @@ class HTTPResponse(Flask_Response):
 
     def inc_metrics(self):
         if self._metrics_emitted_doonce:
-            raise metrics.MetricsException(
+            raise metrics.FlaskMetricsException(
                 "An attempt to emit metrics from this HTTP Response has already been made."
             )
         self._metrics_emitted_doonce = True
