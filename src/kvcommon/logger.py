@@ -1,7 +1,7 @@
 import logging
 import typing as t
 
-logging_format_string = "%(asctime)s - [%(levelname)s] - [%(name)s]: %(message)s"
+logging_format_string = "%(asctime)s - [%(levelname)8s] - [%(name)12s]: %(message)s"
 logging_format_time = "[%Y-%m-%d %H:%M:%S]"
 
 
@@ -10,7 +10,7 @@ def get_logger(
     console_log_level=logging.DEBUG,
     logging_format_string: str = logging_format_string,
     logging_format_time: str = logging_format_time,
-    filters: t.Iterable[logging.Filter] | None = None
+    filters: t.Iterable[logging.Filter] | None = None,
 ):
     logger = logging.getLogger(name=name)
 
