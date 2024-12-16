@@ -1,7 +1,7 @@
 from __future__ import annotations
 import typing as t
 
-from .base import K8sSerializable
+from .serializable import K8sSerializable
 
 
 class IAMBinding(K8sSerializable):

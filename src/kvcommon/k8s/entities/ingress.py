@@ -9,7 +9,7 @@ from kubernetes.client.models.v1_ingress import V1Ingress
 from .base import K8sObject
 from .base import K8sObjectSpec
 from .base import K8sObjectStatus
-from .base import K8sSerializable
+from .serializable import K8sSerializable
 
 from kvcommon.logger import get_logger
 

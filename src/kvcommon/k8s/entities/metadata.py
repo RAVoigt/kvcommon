@@ -7,7 +7,7 @@ from kubernetes.client.models.v1_object_meta import V1ObjectMeta
 
 from kvcommon.exceptions import InvalidDataException
 
-from .base import K8sSerializable
+from .serializable import K8sSerializable
 
 from kvcommon.logger import get_logger
 

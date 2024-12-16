@@ -4,11 +4,11 @@ from kubernetes.client.models.v1_ingress import V1Ingress
 from kubernetes.client.models.v1_ingress_list import V1IngressList
 
 from kvcommon.exceptions import K8sException
-from kvcommon.k8s.clients import K8sClientBase
 from kvcommon.k8s.entities.backendconfig import BackendConfig
 from kvcommon.k8s.entities.ingress import Ingress
 from kvcommon.k8s.entities.service import Service
 
+from .base import K8sClientBase
 from .core import K8sCoreClient
 from .custom_objects import K8sCustomObjectsClient
 
