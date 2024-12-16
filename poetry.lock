@@ -1335,11 +1335,11 @@ MarkupSafe = ">=2.1.1"
 watchdog = ["watchdog (>=2.3)"]
 
 [extras]
-flask = ["flask-apscheduler", "flask-http-middleware"]
+flask = ["flask", "flask-apscheduler", "flask-http-middleware"]
 k8s = ["kubernetes"]
 metrics = ["prometheus-client", "prometheus-flask-exporter"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a30ce862edd7d0e8a1e14f4bb8dee03e6955fafd5e8f3a458f64c29922b15231"
+content-hash = "44975cb3964541e4d2561b449d235303bb6606d7948ea604021053fa0a56ec25"

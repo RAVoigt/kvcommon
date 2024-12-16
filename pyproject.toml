@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kvcommon"
-version = "0.2.2"
+version = "0.2.3"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
 authors = ["Rob Voigt <code@ravoigt.com>"]
 readme = "README.md"
@@ -32,16 +32,16 @@ toml = "^0.10.2"
 # ==== Extras
 
 # Flask
-flask = {version = "^3.1.0", optional = true}
-flask-http-middleware = { version = "^0.4.2", optional = true}
-flask-apscheduler = { version = "^1.13.1", optional = true}
+flask = { version = "^3.1.0", optional = true }
+flask-http-middleware = { version = "^0.4.2", optional = true }
+flask-apscheduler = { version = "^1.13.1", optional = true }
 
 # K8s
-kubernetes = { version = "^31.0.0", optional = true}
+kubernetes = { version = "^31.0.0", optional = true }
 
 # Metrics
-prometheus-client = { version = "^0.20.0", optional = true}
-prometheus-flask-exporter = { version = "^0.23.1", optional = true}
+prometheus-client = { version = "^0.20.0", optional = true }
+prometheus-flask-exporter = { version = "^0.23.1", optional = true }
 
 
 [tool.poetry.dev-dependencies]
@@ -56,6 +56,6 @@ pyfakefs = "*"
 
 
 [tool.poetry.extras]
-flask = ["flask-http-middleware", "flask-apscheduler"]
+flask = ["flask", "flask-http-middleware", "flask-apscheduler"]
 k8s = ["kubernetes"]
 metrics = ["prometheus-client", "prometheus-flask-exporter"]
