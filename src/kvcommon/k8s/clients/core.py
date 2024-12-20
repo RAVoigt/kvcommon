@@ -26,7 +26,7 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     # ==== Services
 
-    def get_namespaced_service(self, namespace: str, service_name: str) -> V1Service:
+    def _get_namespaced_service(self, namespace: str, service_name: str) -> V1Service:
         # Typechecked wrapper
         service = self.api.read_namespaced_service(name=service_name, namespace=namespace)
         if not isinstance(service, V1Service):
@@ -38,14 +38,14 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     def get_service(self, namespace: str, service_name: str) -> Service | None:
         try:
-            v1service = self.get_namespaced_service(namespace=namespace, service_name=service_name)
+            v1service = self._get_namespaced_service(namespace=namespace, service_name=service_name)
             if v1service is not None:
                 return Service.from_model(v1service)
         except (ApiException, K8sException) as ex:
             LOG.warning(f"Error retrieving Service: {ex}")
         return None
 
-    def list_namespaced_services(self, namespace: str) -> V1ServiceList | None:
+    def _list_namespaced_services(self, namespace: str) -> V1ServiceList | None:
         # Typechecked wrapper
         service_list = self.api.list_namespaced_service(namespace=namespace)
         if not isinstance(service_list, V1ServiceList):
@@ -57,7 +57,7 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     def get_all_services(self, namespace: str) -> list[Service]:
         try:
-            service_list = self.list_namespaced_services(namespace=namespace)
+            service_list = self._list_namespaced_services(namespace=namespace)
             if service_list and service_list.items is not None:
                 return [Service.from_model(service) for service in service_list.items]
 
@@ -78,7 +78,7 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     # ==== Secrets
 
-    def get_namespaced_secret(self, namespace: str, name: str) -> V1Secret:
+    def _get_namespaced_secret(self, namespace: str, name: str) -> V1Secret:
         # Typechecked wrapper
         secret = self.api.read_namespaced_secret(name=name, namespace=namespace)
         if not isinstance(secret, V1Secret):
@@ -90,7 +90,7 @@ class K8sCoreClient(K8sClientBase[CoreV1Api]):
 
     def get_secret(self, namespace: str, name: str) -> Secret | None:
         try:
-            v1secret: V1Secret = self.get_namespaced_secret(
+            v1secret: V1Secret = self._get_namespaced_secret(
                 namespace=namespace,
                 name=name,
             )

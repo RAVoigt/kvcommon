@@ -49,8 +49,20 @@ class HTTPResponse(Flask_Response):
                 metric_labels_to_incr.inc()
 
 
+def HealthzAliveResponse(do_metrics=False):
+    return HTTPResponse("Alive", status=200, do_metrics=do_metrics)
+
+
+def HealthzNOTAliveResponse(do_metrics=False):
+    return HTTPResponse("Alive", status=500, do_metrics=do_metrics)
+
+
 def HealthzReadyResponse(do_metrics=False):
     return HTTPResponse("Ready", status=200, do_metrics=do_metrics)
+
+
+def HealthzNOTReadyResponse(do_metrics=False):
+    return HTTPResponse("NOT Ready", status=503, do_metrics=do_metrics)
 
 
 def HTTP_400(msg="", headers={}):
