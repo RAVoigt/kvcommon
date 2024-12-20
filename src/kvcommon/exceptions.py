@@ -10,7 +10,7 @@ class K8sException(KVCException):
     pass
 
 
-class InvalidDataException(K8sException):
+class DataIntegrityException(K8sException):
     pass
 
 

@@ -5,7 +5,7 @@ import typing as t
 
 from kubernetes.client.models.v1_object_meta import V1ObjectMeta
 
-from kvcommon.exceptions import InvalidDataException
+from kvcommon.exceptions import DataIntegrityException
 
 from .serializable import K8sSerializable
 
@@ -20,7 +20,7 @@ class Metadata(K8sSerializable):
         value = self._deserialized.get(metadata_key, default)
 
         if not isinstance(value, (str, dict, list)):
-            raise InvalidDataException(
+            raise DataIntegrityException(
                 f"K8s Metadata with unexpected type ({type(value)}) at key: '{metadata_key}'"
             )
         return value

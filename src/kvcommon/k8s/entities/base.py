@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing as t
 
-from kvcommon.exceptions import InvalidDataException
+from kvcommon.exceptions import DataIntegrityException
 from kvcommon.exceptions import K8sException
 
 from .metadata import Metadata
@@ -49,7 +49,7 @@ class K8sObject(K8sSerializable):
         self._kind = deserialized.get("kind", None)
         if self._expected_kind is not None:
             if self._kind != self._expected_kind:
-                raise InvalidDataException(
+                raise DataIntegrityException(
                     f"Input data has wrong 'Kind' for {self.__class__.__name__}"
                 )
 
