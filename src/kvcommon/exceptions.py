@@ -16,3 +16,11 @@ class InvalidDataException(K8sException):
 
 class KVCFlaskException(KVCException):
     pass
+
+
+class EnvVarException(KVCException):
+    pass
+
+
+class EnvVarTypeException(KVCException):
+    pass
