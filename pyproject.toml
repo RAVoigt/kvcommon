@@ -1,15 +1,19 @@
-[tool.poetry]
+[project]
 name = "kvcommon"
 version = "0.2.5"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
-authors = ["Rob Voigt <code@ravoigt.com>"]
+authors = [
+    {name = "Rob Voigt", email = "code@ravoigt.com"}
+]
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/RAVoigt/kvcommon"
-homepage = "https://github.com/RAVoigt/kvcommon"
+requires-python = ">=3.11"
+
+# [tool.poetry]
+# packages = [{include = "kvcommon"}]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"
 
 [project.urls]
@@ -48,7 +52,7 @@ opentelemetry-exporter-otlp = { version = "*", optional = true } # TODO
 opentelemetry-instrumentation-flask = { version = "*", optional = true } # TODO
 opentelemetry-instrumentation-logging = { version = "*", optional = true } # TODO
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "*"
 ipdb = "*"
 ipython = "*"
@@ -59,7 +63,7 @@ pytest-cov = "*"
 pyfakefs = "*"
 
 
-[tool.poetry.extras]
+[project.optional-dependencies]
 flask = ["flask", "flask-http-middleware", "flask-apscheduler"]
 k8s = ["kubernetes"]
 metrics = ["prometheus-client", "prometheus-flask-exporter"]
