@@ -85,6 +85,8 @@ class TOMLBackend(DatastoreBackend):
         filename: str | pathlib.Path,
     ) -> None:
         self.BASE_DIR = pathlib.Path(storage_dir_path)
+        if str(self.BASE_DIR).startswith("~"):
+            self.BASE_DIR = self.BASE_DIR.expanduser()
         self.BASE_FILE_PATH = self.BASE_DIR / filename
         if not str(self.BASE_FILE_PATH).endswith(".toml"):
             self.BASE_FILE_PATH = self.BASE_FILE_PATH.with_suffix(".toml")
