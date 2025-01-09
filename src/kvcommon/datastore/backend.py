@@ -82,12 +82,12 @@ class TOMLBackend(DatastoreBackend):
     def __init__(
         self,
         storage_dir_path: str | pathlib.Path,
-        user_conf_filename: str | pathlib.Path,
+        filename: str | pathlib.Path,
     ) -> None:
-        self.USER_DIR = pathlib.Path(storage_dir_path)
-        self.USER_CONF_PATH = self.USER_DIR / user_conf_filename
-        if not str(self.USER_CONF_PATH).endswith(".toml"):
-            self.USER_CONF_PATH = self.USER_CONF_PATH.with_suffix(".toml")
+        self.BASE_DIR = pathlib.Path(storage_dir_path)
+        self.BASE_FILE_PATH = self.BASE_DIR / filename
+        if not str(self.BASE_FILE_PATH).endswith(".toml"):
+            self.BASE_FILE_PATH = self.BASE_FILE_PATH.with_suffix(".toml")
 
     @property
     def _data_by_ref(self) -> dict:
@@ -107,19 +107,19 @@ class TOMLBackend(DatastoreBackend):
         """
         try:
             # TODO: Better error handling
-            self.USER_DIR.mkdir(exist_ok=True, parents=True)
-            self.USER_CONF_PATH.touch(exist_ok=True)
+            self.BASE_DIR.mkdir(exist_ok=True, parents=True)
+            self.BASE_FILE_PATH.touch(exist_ok=True)
 
             # Ensure permissions are good before we store anything
-            os.chmod(self.USER_DIR, 0o700)
-            os.chmod(self.USER_CONF_PATH, 0o700)
+            os.chmod(self.BASE_DIR, 0o700)
+            os.chmod(self.BASE_FILE_PATH, 0o700)
 
-            with open(self.USER_CONF_PATH, "w") as toml_file:
+            with open(self.BASE_FILE_PATH, "w") as toml_file:
                 toml.dump(data, toml_file)
         except OSError as ex:
             LOG.error(
                 "Failed to write config to TOML at path: '%s' - full_exception=%s",
-                self.USER_CONF_PATH,
+                self.BASE_FILE_PATH,
                 ex,
             )
             raise ex
@@ -131,16 +131,16 @@ class TOMLBackend(DatastoreBackend):
         a fresh config file is created and its contents returned.
         """
         data = dict()
-        if not self.USER_CONF_PATH.is_file():
+        if not self.BASE_FILE_PATH.is_file():
             self.write_data(data)
 
         else:
             try:
-                data: dict = toml.load(self.USER_CONF_PATH)
+                data: dict = toml.load(self.BASE_FILE_PATH)
             except OSError as ex:
                 LOG.error(
                     "Failed to load config from TOML at path: '%s' - full_exception=%s",
-                    self.USER_CONF_PATH,
+                    self.BASE_FILE_PATH,
                     ex,
                 )
                 raise ex
