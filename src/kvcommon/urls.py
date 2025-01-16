@@ -2,6 +2,13 @@ import typing as t
 from urllib.parse import urlparse
 from urllib.parse import ParseResult
 
+def coerce_parseresult(url: str | ParseResult) -> ParseResult:
+    if isinstance(url, ParseResult):
+        return url
+    if isinstance(url, str):
+        return urlparse(url)
+    raise TypeError("url must be str or ParseResult")
+
 
 def urlparse_ignore_scheme(
     url: str, scheme: str = "http", force_scheme: bool = False
