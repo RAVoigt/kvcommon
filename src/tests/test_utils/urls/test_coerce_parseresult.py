@@ -10,10 +10,12 @@ def test_str():
     result = coerce_parseresult(value)
     assert isinstance(result, ParseResult)
 
+
 def test_parseresult():
     value = urlparse("https://www.example.com")
     result = coerce_parseresult(value)
     assert isinstance(result, ParseResult)
+
 
 def test_invalid():
     value = 1
