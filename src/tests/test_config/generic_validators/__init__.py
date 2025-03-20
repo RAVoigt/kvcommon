@@ -19,5 +19,5 @@ class BaseValidatorTestSuite(TestCase):
 
     def setUp(self) -> None:
         self.var: ConfigVar = create_fake_var()
-        self.var.add_validator(self.validator)
+        self.validator.set_name(self.var.name)
         return super().setUp()
