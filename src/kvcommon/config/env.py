@@ -36,18 +36,18 @@ class EnvVar(Generic[ConfigVarType]):
         value_from_env = os_get_env(key)
         if not value_from_env:
             value_from_env = default
-
-        if coerce_type == bool:
-            coerced_value = to_bool(value_from_env)
-        elif coerce_type == int:
-            coerced_value = int(value_from_env)
-        elif coerce_type == float:
-            coerced_value = float(value_from_env)
-        elif coerce_type == str:
-            coerced_value = str(value_from_env)
-        elif coerce_type == list:
-            values = str(value_from_env).split(",")
-            coerced_value = [value.strip() for value in values]
+        else:
+            if coerce_type == bool:
+                coerced_value = to_bool(value_from_env)
+            elif coerce_type == int:
+                coerced_value = int(value_from_env)
+            elif coerce_type == float:
+                coerced_value = float(value_from_env)
+            elif coerce_type == str:
+                coerced_value = str(value_from_env)
+            elif coerce_type == list:
+                values = str(value_from_env).split(",")
+                coerced_value = [value.strip() for value in values]
 
         self._var = ConfigVarImmutable(name=key, value=coerced_value, expected_type=coerce_type)
 
@@ -65,8 +65,5 @@ class EnvVar(Generic[ConfigVarType]):
     def value(self) -> ConfigVarType:
         return self._var.value
 
-    def add_validator(self, new_validator: VarValidator | Collection[VarValidator]):
-        return self._var.add_validator(new_validator)
-
-    def validate(self):
-        return self._var.validate()
+    def validate(self, validators: VarValidator | Collection[VarValidator]) -> ConfigVarType:
+        return self._var.validate(validators)
