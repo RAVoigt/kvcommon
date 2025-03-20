@@ -17,23 +17,17 @@ class ConfigVar(Generic[ConfigVarType]):
     _name: str
     _value_type: Type[ConfigVarType]
     _value: ConfigVarType
-    _validators: list[VarValidator]
 
     def __init__(
         self,
         name: str,
         value: ConfigVarType,
-        expected_type: Type[ConfigVarType],
-        validators: VarValidator | list[VarValidator] | None = None,
+        expected_type: Type[ConfigVarType]
     ) -> None:
 
         self._name = name
         self._value_type = expected_type
         self._set(value)
-
-        self._validators = list()
-        if validators:
-            self.add_validator(validators)
 
     def __str__(self) -> str:
         return str(self.value)
@@ -60,18 +54,20 @@ class ConfigVar(Generic[ConfigVarType]):
     def set(self, new_value):
         self._set(new_value)
 
-    def add_validator(self, new_validator: VarValidator | Collection[VarValidator]):
-        if isinstance(new_validator, Collection):
-            for v in new_validator:
-                v.set_name(self._name)
-            self._validators.extend(new_validator)
-        else:
-            new_validator.set_name(self._name)
-            self._validators.append(new_validator)
+    def validate(self, validators: VarValidator | Collection[VarValidator]) -> ConfigVarType:
+        """
+        Validate the value of the ConfigVar against a collection of VarValidators
 
-    def validate(self):
-        for validator in self._validators:
-            validator(self.value)
+        raises: `ConfigValidationError` (if validation failed)
+
+        returns: `ConfigVar.value` (on successful validation)
+        """
+        if not isinstance(validators, Collection):
+            validators = (validators, )
+        for v in validators:
+            v.set_name(self._name)
+            v(self.value)
+        return self.value
 
 
 class ConfigVarImmutable(ConfigVar):

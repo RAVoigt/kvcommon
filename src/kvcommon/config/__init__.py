@@ -1,4 +1,5 @@
 from . import exceptions
+from . import validators
 from .env import EnvVar
 from .validators import VarValidator
 from .validators import ValidatorFunc
@@ -9,6 +10,7 @@ from .var import ConfigVarImmutable
 
 __all__ = [
     "exceptions",
+    "validators",
     "ConfigVar",
     "ConfigVarImmutable",
     "EnvVar",

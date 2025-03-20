@@ -60,16 +60,6 @@ def test_set_name():
     validator.set_name("new_var_name")
     assert validator._var_name == "new_var_name"
 
-def test_adding_to_var_sets_name():
-    validator = VarValidator(
-        v_func=null_func,
-        err_msg="Null"
-    )
-    test_name = "test_adding_to_var_sets_name"
-    fake_var = create_fake_var(name=test_name)
-    fake_var.add_validator(validator)
-    assert validator._var_name == test_name
-
 
 def test_type_error_for_invalid_validator_func():
     with pytest.raises(TypeError):
