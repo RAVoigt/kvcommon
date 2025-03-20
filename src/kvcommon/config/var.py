@@ -10,8 +10,7 @@ from .exceptions import ImmutableVarException
 from .validators import VarValidator
 
 
-ConfigVarType = TypeVar("ConfigVarType", int, float, str, bool)
-ConfigVarType_Complex = TypeVar("ConfigVarType_Complex", str, Collection, dict)  # TODO
+ConfigVarType = TypeVar("ConfigVarType", int, float, str, bool, Collection, dict)
 
 
 class ConfigVar(Generic[ConfigVarType]):
@@ -76,9 +75,18 @@ class ConfigVar(Generic[ConfigVarType]):
 
 
 class ConfigVarImmutable(ConfigVar):
+    _init_done: bool = False
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._init_done = True
 
     def __setattr__(self, name, value):
-        raise ImmutableVarException()
+        if self._init_done:
+            raise ImmutableVarException()
+        super().__setattr__(name, value)
 
     def set(self, *args, **kwargs):
-        raise ImmutableVarException()
+        if self._init_done:
+            raise ImmutableVarException()
+        super().set(*args, **kwargs)
