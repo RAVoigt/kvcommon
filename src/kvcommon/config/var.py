@@ -10,7 +10,7 @@ from .exceptions import ImmutableVarException
 from .validators import VarValidator
 
 
-ConfigVarType = TypeVar("ConfigVarType", int, float, str, bool, Collection, dict)
+ConfigVarType = TypeVar("ConfigVarType", int, float, str, bool, list, dict)
 
 
 class ConfigVar(Generic[ConfigVarType]):
