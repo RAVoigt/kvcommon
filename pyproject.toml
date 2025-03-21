@@ -1,6 +1,6 @@
 [project]
 name = "kvcommon"
-version = "0.2.11"
+version = "0.2.12"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
 authors = [
     {name = "Rob Voigt", email = "code@ravoigt.com"}
