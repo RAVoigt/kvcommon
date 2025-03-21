@@ -38,18 +38,18 @@ class EnvVar(Generic[ConfigVarType]):
             value_from_env = default
         else:
             if coerce_type == bool:
-                coerced_value = to_bool(value_from_env)
+                value_from_env = to_bool(value_from_env)
             elif coerce_type == int:
-                coerced_value = int(value_from_env)
+                value_from_env = int(value_from_env)
             elif coerce_type == float:
-                coerced_value = float(value_from_env)
+                value_from_env = float(value_from_env)
             elif coerce_type == str:
-                coerced_value = str(value_from_env)
+                value_from_env = str(value_from_env)
             elif coerce_type == list:
                 values = str(value_from_env).split(",")
-                coerced_value = [value.strip() for value in values]
+                value_from_env = [value.strip() for value in values]
 
-        self._var = ConfigVarImmutable(name=key, value=coerced_value, expected_type=coerce_type)
+        self._var = ConfigVarImmutable(name=key, value=value_from_env, expected_type=coerce_type)
 
     def __str__(self) -> str:
         return str(self._var.value)
