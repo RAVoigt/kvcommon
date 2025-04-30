@@ -10,7 +10,7 @@ from flask_http_middleware import MiddlewareManager
 
 from kvcommon.logger import get_logger
 from flask_http_middleware import BaseHTTPMiddleware
-from kvcommon.flask.middleware import KVCFlaskMiddleware
+from kvcommon.flask_utils.middleware import KVCFlaskMiddleware
 
 
 LOG = get_logger("needle-proxy")
