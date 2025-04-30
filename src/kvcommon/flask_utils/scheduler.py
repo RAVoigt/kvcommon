@@ -6,7 +6,7 @@ from apscheduler.events import EVENT_JOB_ERROR
 from apscheduler.events import EVENT_JOB_EXECUTED
 from apscheduler.events import EVENT_JOB_MISSED
 from apscheduler.events import JobExecutionEvent
-from kvcommon.flask import metrics
+from kvcommon.flask_utils import metrics
 from kvcommon.logger import get_logger
 
 
@@ -42,9 +42,7 @@ class SchedulerEventTracker(object):
                     event_str = "Missed"
             SchedulerEventTracker._job_event_track(job_id=event.job_id, event=event_str)
         else:
-            LOG.warning(
-                f"Scheduler Event Listener: Unexpected event type: '{type(event).__name__}'"
-            )
+            LOG.warning(f"Scheduler Event Listener: Unexpected event type: '{type(event).__name__}'")
 
 
 class Scheduler:
@@ -64,9 +62,7 @@ class Scheduler:
     ):
         LOG.debug("Scheduler: Adding job with ID: '%s', Interval: %s (s)", job_id, interval_seconds)
 
-        @self.ap_scheduler.task(
-            "interval", id=job_id, seconds=interval_seconds, misfire_grace_time=misfire_grace_time
-        )
+        @self.ap_scheduler.task("interval", id=job_id, seconds=interval_seconds, misfire_grace_time=misfire_grace_time)
         def job():
             # wrapping the job in a closure
             LOG.debug(f"Scheduler: Executing Job<{job_id}>")

@@ -8,8 +8,8 @@ from flask_http_middleware import BaseHTTPMiddleware
 from flask_http_middleware import MiddlewareManager
 
 from kvcommon.urls import urlparse_ignore_scheme
-from kvcommon.flask import metrics
-from kvcommon.flask.context import set_flask_context_local
+from kvcommon.flask_utils import metrics
+from kvcommon.flask_utils.context import set_flask_context_local
 from kvcommon import logger
 
 LOG = logger.get_logger("kvc-flask")
