@@ -1,23 +1,16 @@
-[project]
+[tool.poetry]
 name = "kvcommon"
-version = "0.2.12"
+version = "0.3.0"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
-authors = [
-    {name = "Rob Voigt", email = "code@ravoigt.com"}
-]
+authors = ["Rob Voigt <code@ravoigt.com>"]
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.11"
-dynamic = [ "dependencies" ]
-dependencies = ["toml (>=0.10.2,<0.11.0)"]
+homepage = "https://github.com/RAVoigt/kvcommon"
+repository = "https://github.com/RAVoigt/kvcommon"
 
 [build-system]
-requires = ["poetry-core>=2.0"]
+requires = ["poetry-core>=1.0.0"] # Poetry 1.x style; not PEP 621
 build-backend = "poetry.core.masonry.api"
-
-[project.urls]
-Homepage = "https://github.com/RAVoigt/kvcommon"
-Repository = "https://github.com/RAVoigt/kvcommon"
 
 # ================================
 # Tools etc.
@@ -64,8 +57,7 @@ pytest = "*"
 pytest-cov = "*"
 pyfakefs = "*"
 
-
-[project.optional-dependencies]
+[tool.poetry.extras]
 flask = ["flask", "flask-http-middleware", "flask-apscheduler"]
 k8s = ["kubernetes"]
 metrics = ["prometheus-client", "prometheus-flask-exporter"]
