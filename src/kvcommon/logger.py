@@ -11,7 +11,7 @@ def get_logger(
     logging_format_string: str = logging_format_string,
     logging_format_time: str = logging_format_time,
     filters: t.Iterable[logging.Filter] | None = None,
-):
+) -> logging.Logger:
     logger = logging.getLogger(name=name)
 
     if logger.hasHandlers():

@@ -1,6 +1,6 @@
 from flask.wrappers import Response as Flask_Response
 
-from kvcommon.flask import metrics
+from kvcommon.flask_utils import metrics
 
 
 class HTTPResponse(Flask_Response):
