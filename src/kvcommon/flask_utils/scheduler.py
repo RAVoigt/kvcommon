@@ -1,5 +1,10 @@
+from __future__ import annotations
 import logging
-from typing import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Callable
+    from prometheus_client import Histogram
 
 from flask_apscheduler import APScheduler
 from apscheduler.events import EVENT_JOB_ERROR
@@ -59,14 +64,28 @@ class Scheduler:
         job_id: str,
         interval_seconds: int = 300,
         misfire_grace_time: int = 900,
+        metric: Histogram | None = None,
+        metric_labels: dict[str, str] | None = None,
+        *job_args,
+        **job_kwargs
     ):
         LOG.debug("Scheduler: Adding job with ID: '%s', Interval: %s (s)", job_id, interval_seconds)
 
+        metric_labels = metric_labels or dict()
+
+        # Wrapping the job in a closure
         @self.ap_scheduler.task("interval", id=job_id, seconds=interval_seconds, misfire_grace_time=misfire_grace_time)
         def job():
-            # wrapping the job in a closure
+
             LOG.debug(f"Scheduler: Executing Job<{job_id}>")
-            job_func()
+            if not metric:
+                job_func(*job_args, **job_kwargs)
+                return
+            else:
+                # Wrap the call with a Histogram metric time() if supplied
+                with metric.labels(**metric_labels).time():
+                    job_func(*job_args, **job_kwargs)
+
 
     def start(self, flask_app):
         self.ap_scheduler.init_app(flask_app)
