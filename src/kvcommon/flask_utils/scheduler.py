@@ -1,16 +1,15 @@
 from __future__ import annotations
 import logging
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from typing import Callable
-    from prometheus_client import Histogram
+from typing import Callable
 
-from flask_apscheduler import APScheduler
 from apscheduler.events import EVENT_JOB_ERROR
 from apscheduler.events import EVENT_JOB_EXECUTED
 from apscheduler.events import EVENT_JOB_MISSED
 from apscheduler.events import JobExecutionEvent
+from flask_apscheduler import APScheduler
+from prometheus_client import Histogram
+
 from kvcommon.flask_utils import metrics
 from kvcommon.logger import get_logger
 
@@ -86,16 +85,21 @@ class Scheduler:
                 with metric.labels(**metric_labels).time():
                     job_func(*job_args, **job_kwargs)
 
-
     def start(self, flask_app):
         self.ap_scheduler.init_app(flask_app)
         logging.getLogger("apscheduler").setLevel(logging.WARNING)
+        LOG.debug(f"Scheduler: Starting jobs")
 
         self.ap_scheduler.add_listener(
             SchedulerEventTracker.event_listener,
             EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED,
         )
         self.ap_scheduler.start()
+
+    def stop(self):
+        LOG.debug(f"Scheduler: Stopping jobs and shutting down")
+        self.ap_scheduler.pause()
+        self.ap_scheduler.shutdown()
 
 
 scheduler = Scheduler()
