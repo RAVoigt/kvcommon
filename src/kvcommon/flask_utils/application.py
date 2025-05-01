@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-# coding=utf-8
 import typing as t
 
 from flask import Flask
@@ -8,12 +7,8 @@ from flask import Flask
 # from flask_cors import CORS # TODO
 from flask_http_middleware import MiddlewareManager
 
-from kvcommon.logger import get_logger
 from flask_http_middleware import BaseHTTPMiddleware
 from kvcommon.flask_utils.middleware import KVCFlaskMiddleware
-
-
-LOG = get_logger("needle-proxy")
 
 
 def create_app_with_middleware(
