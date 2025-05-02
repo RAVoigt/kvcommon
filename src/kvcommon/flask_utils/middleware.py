@@ -6,6 +6,7 @@ import flask
 
 from flask_http_middleware import BaseHTTPMiddleware
 from flask_http_middleware import MiddlewareManager
+from prometheus_client import Histogram
 
 from kvcommon.urls import urlparse_ignore_scheme
 from kvcommon.flask_utils import metrics
@@ -15,30 +16,35 @@ from kvcommon import logger
 LOG = logger.get_logger("kvc-flask")
 
 
-def is_meta_url(url: str, prefix: str | None = None) -> bool:
+def is_meta_url(url: str, prefix: str | None = "meta") -> bool:
     if not prefix:
         return False
     if not prefix.startswith("/"):
         prefix = f"/{prefix}"
     if not prefix.endswith("/"):
         prefix = f"{prefix}/"
-    if url.startswith(prefix) or url.startswith("/healthz/"):
-        return True
-    return False
+    return url.startswith(prefix)
+
+
+def is_healthz_url(url: str) -> bool:
+    return url.startswith("/healthz/") or url.startswith("/livez/")
 
 
 @dataclasses.dataclass(kw_only=True)
 class PreDispatchResult:
     url_parts: ParseResult
-    is_meta: bool
+    is_meta: bool = False
+    is_healthz: bool = False
 
 
 class KVCFlaskMiddleware(BaseHTTPMiddleware):
     _meta_prefix: str
+    _server_request_metric: Histogram | None
 
-    def __init__(self, meta_prefix: str | None):
+    def __init__(self, meta_prefix: str | None, server_request_metric: Histogram | None = None):
         if meta_prefix:
             self._meta_prefix = meta_prefix
+        self._server_request_metric = server_request_metric
         super().__init__()
 
     def _pre_dispatch(self, request) -> PreDispatchResult:
@@ -48,12 +54,17 @@ class KVCFlaskMiddleware(BaseHTTPMiddleware):
 
         is_meta: bool = is_meta_url(url_path, prefix=self._meta_prefix)
         set_flask_context_local("is_meta_request", is_meta)
+        is_healthz: bool = is_healthz_url(url_path)
+        set_flask_context_local("is_healthz_request", is_healthz)
 
         # Return this result for use in subclasses calling super()
-        return PreDispatchResult(url_parts=url_parts, is_meta=is_meta)
+        return PreDispatchResult(url_parts=url_parts, is_meta=is_meta, is_healthz=is_healthz)
 
-    def _dispatch(self, request, call_next, metric=metrics.SERVER_REQUEST_SECONDS, **labels):
-        with metric.labels(**labels).time():
+    def _dispatch(self, request, call_next, **labels):
+        if not self._server_request_metric:
+            return call_next(request)
+
+        with self._server_request_metric.labels(**labels).time():
             return call_next(request)
 
     def dispatch(self, request, call_next):

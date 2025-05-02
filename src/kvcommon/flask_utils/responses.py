@@ -1,10 +1,11 @@
 from flask.wrappers import Response as Flask_Response
 
 from kvcommon.flask_utils import metrics
+from prometheus_client import Counter
 
 
 class HTTPResponse(Flask_Response):
-    _METRIC = metrics.HTTP_RESPONSE_COUNT
+    _METRIC: Counter
     _metrics_labels: dict
     _metrics_emitted_doonce: bool = False
 
@@ -14,6 +15,7 @@ class HTTPResponse(Flask_Response):
         do_metrics=True,
         defer_metrics=False,
         metrics_labels: dict | None = None,
+        metrics_prefix: str | None = None,
         **kwargs,
     ) -> None:
         """
@@ -28,6 +30,9 @@ class HTTPResponse(Flask_Response):
             metrics_labels: Optional dict of key-value pairs of labels to add to the emitted metrics
         """
         super().__init__(*args, **kwargs)
+
+        self._METRIC = metrics.DefaultMetrics.HTTP_RESPONSE_COUNT(metrics_prefix)
+
         self._do_metrics = do_metrics
         self._defer_metrics = defer_metrics
         self._metrics_labels = dict(code=str(self.status_code))

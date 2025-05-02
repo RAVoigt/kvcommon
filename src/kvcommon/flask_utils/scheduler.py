@@ -1,5 +1,6 @@
 from __future__ import annotations
 import logging
+import typing as t
 
 from typing import Callable
 
@@ -7,7 +8,9 @@ from apscheduler.events import EVENT_JOB_ERROR
 from apscheduler.events import EVENT_JOB_EXECUTED
 from apscheduler.events import EVENT_JOB_MISSED
 from apscheduler.events import JobExecutionEvent
+from apscheduler.schedulers import SchedulerNotRunningError
 from flask_apscheduler import APScheduler
+from prometheus_client import Counter
 from prometheus_client import Histogram
 
 from kvcommon.flask_utils import metrics
@@ -17,45 +20,63 @@ from kvcommon.logger import get_logger
 LOG = get_logger("kvc-flask-scheduler")
 
 
-# Filter to reduce log spam from APScheduler
-class SuppressThreadPoolExecutorLogging(logging.Filter):
-    def filter(self, record):
-        return "ThreadPoolExecutor" not in record.getMessage()
+def filter_apscheduler_logs(logger: logging.Logger = LOG):
+    # Filter to reduce log spam from APScheduler
+    class SuppressThreadPoolExecutorLogging(logging.Filter):
+        def filter(self, record):
+            return "ThreadPoolExecutor" not in record.getMessage()
 
-
-LOG.addFilter(SuppressThreadPoolExecutorLogging())
+    logger.addFilter(SuppressThreadPoolExecutorLogging())
 
 
 class SchedulerEventTracker(object):
+    """
+    Emits metrics for job events
+    """
+    job_event_metric: Counter
 
-    @staticmethod
-    def _job_event_track(job_id: str, event: str):
-        LOG.debug(f"Scheduler Event Listener: {event}: Job <'{job_id}'>")
-        metrics.incr(metrics.SCHEDULER_JOB_EVENT.labels(job_id=job_id, event=event.lower()))
+    def __init__(self, job_event_metric: Counter) -> None:
+        self.job_event_metric = job_event_metric
 
-    @staticmethod
-    def event_listener(event):
-        if isinstance(event, JobExecutionEvent):
-            event_str = "Unknown"
-            if event.exception or event.code == EVENT_JOB_ERROR:
-                event_str = "Error"
+    def get_event_listener(self) -> t.Callable[[JobExecutionEvent], None]:
+
+        def event_listener(event):
+            if isinstance(event, JobExecutionEvent):
+                event_str = "Unknown"
+                if event.exception or event.code == EVENT_JOB_ERROR:
+                    event_str = "Error"
+                else:
+                    if event.code == EVENT_JOB_EXECUTED:
+                        event_str = "Executed"
+                    elif event.code == EVENT_JOB_MISSED:
+                        event_str = "Missed"
+
+                LOG.debug(f"Scheduler Event Listener: {event}: Job <'{event.job_id}'>")
+                metrics.incr(self.job_event_metric.labels(job_id=event.job_id, event=event_str.lower()))
+
             else:
-                if event.code == EVENT_JOB_EXECUTED:
-                    event_str = "Executed"
-                elif event.code == EVENT_JOB_MISSED:
-                    event_str = "Missed"
-            SchedulerEventTracker._job_event_track(job_id=event.job_id, event=event_str)
-        else:
-            LOG.warning(f"Scheduler Event Listener: Unexpected event type: '{type(event).__name__}'")
+                LOG.warning(f"Scheduler Event Listener: Unexpected event type: '{type(event).__name__}'")
+        return event_listener
 
 
 class Scheduler:
+    """
+    Wraps APScheduler with some convenience functions and adds logging and metrics
+    """
     ap_scheduler: APScheduler
+    event_tracker: SchedulerEventTracker | None
+    job_time_metric: Histogram | None
 
-    def __init__(self) -> None:
+    def __init__(self, job_time_metric: Histogram | None = None, job_event_metric: Counter | None = None) -> None:
         scheduler = APScheduler()
         scheduler.api_enabled = True
         self.ap_scheduler = scheduler
+
+        self.job_time_metric = job_time_metric
+
+        self.event_tracker = None
+        if job_event_metric is not None:
+            self.event_tracker = SchedulerEventTracker(job_event_metric)
 
     def add_job_on_interval(
         self,
@@ -75,31 +96,35 @@ class Scheduler:
         # Wrapping the job in a closure
         @self.ap_scheduler.task("interval", id=job_id, seconds=interval_seconds, misfire_grace_time=misfire_grace_time)
         def job():
-
             LOG.debug(f"Scheduler: Executing Job<{job_id}>")
+
             if not metric:
                 job_func(*job_args, **job_kwargs)
                 return
-            else:
-                # Wrap the call with a Histogram metric time() if supplied
-                with metric.labels(**metric_labels).time():
-                    job_func(*job_args, **job_kwargs)
+
+            # Wrap the call with a Histogram metric time() if supplied
+            with metric.labels(**metric_labels).time():
+                job_func(*job_args, **job_kwargs)
 
     def start(self, flask_app):
         self.ap_scheduler.init_app(flask_app)
         logging.getLogger("apscheduler").setLevel(logging.WARNING)
         LOG.debug(f"Scheduler: Starting jobs")
 
-        self.ap_scheduler.add_listener(
-            SchedulerEventTracker.event_listener,
-            EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED,
-        )
+        if self.event_tracker:
+            self.ap_scheduler.add_listener(
+                self.event_tracker.get_event_listener(),
+                EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED,
+            )
         self.ap_scheduler.start()
 
     def stop(self):
         LOG.debug(f"Scheduler: Stopping jobs and shutting down")
-        self.ap_scheduler.pause()
-        self.ap_scheduler.shutdown()
+        try:
+            self.ap_scheduler.pause()
+            self.ap_scheduler.shutdown()
+        except SchedulerNotRunningError:
+            pass
 
 
 scheduler = Scheduler()
