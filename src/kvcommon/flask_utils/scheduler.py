@@ -1,5 +1,6 @@
 from __future__ import annotations
 import logging
+import threading
 import typing as t
 
 from typing import Callable
@@ -67,9 +68,9 @@ class Scheduler:
     event_tracker: SchedulerEventTracker | None
     job_time_metric: Histogram | None
 
-    def __init__(self, job_time_metric: Histogram | None = None, job_event_metric: Counter | None = None) -> None:
+    def __init__(self, job_time_metric: Histogram | None = None, job_event_metric: Counter | None = None, api_enabled: bool = False) -> None:
         scheduler = APScheduler()
-        scheduler.api_enabled = True
+        scheduler.api_enabled = api_enabled
         self.ap_scheduler = scheduler
 
         self.job_time_metric = job_time_metric
@@ -86,6 +87,7 @@ class Scheduler:
         misfire_grace_time: int = 900,
         metric: Histogram | None = None,
         metric_labels: dict[str, str] | None = None,
+        run_immediately_via_thread: bool = False,
         *job_args,
         **job_kwargs
     ):
@@ -105,6 +107,10 @@ class Scheduler:
             # Wrap the call with a Histogram metric time() if supplied
             with metric.labels(**metric_labels).time():
                 job_func(*job_args, **job_kwargs)
+
+        if run_immediately_via_thread:
+            thread = threading.Thread(target = job)
+            thread.start()
 
     def start(self, flask_app):
         self.ap_scheduler.init_app(flask_app)
