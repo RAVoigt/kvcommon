@@ -88,6 +88,7 @@ class Scheduler:
         metric: Histogram | None = None,
         metric_labels: dict[str, str] | None = None,
         run_immediately_via_thread: bool = False,
+        verbose_logging: bool = False,
         *job_args,
         **job_kwargs
     ):
@@ -98,7 +99,8 @@ class Scheduler:
         # Wrapping the job in a closure
         @self.ap_scheduler.task("interval", id=job_id, seconds=interval_seconds, misfire_grace_time=misfire_grace_time)
         def job():
-            LOG.debug(f"Scheduler: Executing Job<{job_id}>")
+            if verbose_logging:
+                LOG.debug(f"Scheduler: Executing Job:'{job_id}'")
 
             if not metric:
                 job_func(*job_args, **job_kwargs)
