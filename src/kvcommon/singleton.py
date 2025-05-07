@@ -1,3 +1,5 @@
+from abc import ABCMeta, abstractmethod
+
 class SingletonMeta(type):
     _instances = {}
 
@@ -12,3 +14,6 @@ Example:
 class MySingleton(metaclass=SingletonMeta):
     pass
 """
+
+class AbstractSingleton(SingletonMeta, ABCMeta):
+    pass
