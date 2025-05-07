@@ -752,15 +752,15 @@ testing = ["Django", "attrs", "colorama", "docopt", "pytest (<9.0.0)"]
 
 [[package]]
 name = "jinja2"
-version = "3.1.5"
+version = "3.1.6"
 description = "A very fast and expressive template engine."
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
 markers = "extra == \"flask\" or extra == \"metrics\""
 files = [
-    {file = "jinja2-3.1.5-py3-none-any.whl", hash = "sha256:aba0f4dc9ed8013c424088f68a5c226f7d6097ed89b246d7749c2ec4175c6adb"},
-    {file = "jinja2-3.1.5.tar.gz", hash = "sha256:8fefff8dc3034e27bb80d67c671eb8a9bc424c0ef4c0826edbff304cceff43bb"},
+    {file = "jinja2-3.1.6-py3-none-any.whl", hash = "sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67"},
+    {file = "jinja2-3.1.6.tar.gz", hash = "sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d"},
 ]
 
 [package.dependencies]
@@ -1916,7 +1916,7 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 type = ["pytest-mypy"]
 
 [extras]
-flask = ["flask", "flask-apscheduler", "flask-http-middleware"]
+flask = ["flask", "flask-apscheduler", "flask-http-middleware", "jinja2"]
 k8s = ["kubernetes"]
 metrics = ["prometheus-client", "prometheus-flask-exporter"]
 traces = ["opentelemetry-exporter-otlp", "opentelemetry-instrumentation-flask", "opentelemetry-instrumentation-logging"]
@@ -1924,4 +1924,4 @@ traces = ["opentelemetry-exporter-otlp", "opentelemetry-instrumentation-flask", 
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "35e2549f1105fe722931be90ef0b93e5b7308517cdcdfdf5fc9f79184b11664c"
+content-hash = "48d9bd49bb506961caab1f7b65ebee38e3e7a996aa72685cd9a673ab476a467c"
