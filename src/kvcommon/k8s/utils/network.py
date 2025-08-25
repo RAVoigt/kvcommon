@@ -41,7 +41,6 @@ def get_headless_service_replica_ips(service_url: str, service_port: int | str |
 
     records = set()
     for record in records_raw:
-        LOG.debug(f"Resolved record: {record}")
         records.add(ReplicaRecord(ip=str(record[4][0]), port=int(record[4][1])))
 
     return records
