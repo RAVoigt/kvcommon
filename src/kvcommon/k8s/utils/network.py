@@ -17,6 +17,7 @@ class ReplicaRecord:
     def __str__(self) -> str:
         return f"<Replica: {self.ip}:{self.port}>"
 
+    @property
     def url(self, scheme: str = "http") -> str:
         return urlunparse((scheme, f"{self.ip}:{self.port}", "", "", "", ""))
 
