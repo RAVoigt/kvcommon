@@ -21,6 +21,12 @@ class ReplicaRecord:
     def url(self, scheme: str = "http") -> str:
         return urlunparse((scheme, f"{self.ip}:{self.port}", "", "", "", ""))
 
+    def __eq__(self, other):
+        return isinstance(other, ReplicaRecord) and self.ip == other.ip and self.port == other.port
+
+    def __hash__(self):
+        return hash(f"{self.ip}:{self.port}")
+
 
 def get_headless_service_replica_ips(service_url: str, service_port: int | str | None = None) -> set[ReplicaRecord]:
     parsed = urlparse_ignore_scheme(service_url)
