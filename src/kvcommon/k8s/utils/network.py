@@ -22,21 +22,22 @@ class ReplicaRecord:
         return urlunparse((scheme, f"{self.ip}:{self.port}", "", "", "", ""))
 
 
-def get_all_replica_ips_from_headless_service(service_url: str, service_port: int|str|None = None) -> set[ReplicaRecord]:
+def get_headless_service_replica_ips(service_url: str, service_port: int | str | None = None) -> set[ReplicaRecord]:
+    parsed = urlparse_ignore_scheme(service_url)
+    service_hostname = f"{parsed.scheme}://{parsed.hostname}"
     if not service_port:
         parsed = urlparse_ignore_scheme(service_url)
-        service_url = f"{parsed.scheme}://{parsed.hostname}"
         service_port = parsed.port
 
         if not service_port:
             raise ValueError(f"service_url must include port if service_port is not provided separately: {service_url}")
 
     # Resolve all A records of the headless K8s service
-    # LOG.debug("Querying headless K8s service for replica IPs: " + f"{service_url}:{service_port}")
+    # LOG.debug("Querying headless K8s service for replica IPs: " + f"{service_hostname}:{service_port}")
     try:
-        records_raw = socket.getaddrinfo(service_url, service_port, proto=socket.IPPROTO_TCP)
+        records_raw = socket.getaddrinfo(service_hostname, service_port, proto=socket.IPPROTO_TCP)
     except socket.gaierror as ex:
-        raise KVCNetworkException(f"Failed to resolve headless service '{service_url}:{service_port}': {ex}")
+        raise KVCNetworkException(f"Failed to resolve headless service '{service_hostname}:{service_port}': {ex}")
 
     records = set()
     for record in records_raw:
