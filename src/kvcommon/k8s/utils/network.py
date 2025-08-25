@@ -30,7 +30,7 @@ class ReplicaRecord:
 
 def get_headless_service_replica_ips(service_url: str, service_port: int | str | None = None) -> set[ReplicaRecord]:
     parsed = urlparse_ignore_scheme(service_url)
-    service_hostname = f"{parsed.scheme}://{parsed.hostname}"
+    service_hostname = parsed.hostname
     service_port = service_port or parsed.port
     if not service_port:
         raise ValueError(f"service_url must include port if service_port is not provided separately: {service_url}")

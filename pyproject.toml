@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kvcommon"
-version = "0.4.2"
+version = "0.4.3"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
 authors = ["Rob Voigt <code@ravoigt.com>"]
 readme = "README.md"
