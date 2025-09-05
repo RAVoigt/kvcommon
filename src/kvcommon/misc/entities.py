@@ -1,4 +1,5 @@
 import json
+import typing as t
 from typing import Generic
 from typing import Type
 from typing import TypeVar
@@ -58,6 +59,9 @@ class SerializableObject:
 
     def __str__(self):
         return self.serialize()
+
+    def _get_internal(self, key: str, default: t.Any | None = None) -> t.Any:
+        return self._deserialized.get(key, default)
 
     @classmethod
     def from_json(cls, serialized: str) -> Self:

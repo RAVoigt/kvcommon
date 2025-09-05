@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import typing as t
 
 from kvcommon.exceptions import InvalidDataException
@@ -7,8 +6,9 @@ from kvcommon.exceptions import K8sException
 
 from .metadata import Metadata
 from .serializable import K8sSerializable
-
+from kvcommon.k8s.utils import serialization
 from kvcommon.logger import get_logger
+
 
 LOG = get_logger("kvc-k8s")
 
@@ -50,7 +50,8 @@ class K8sObject(K8sSerializable):
         if self._expected_kind is not None:
             if self._kind != self._expected_kind:
                 raise InvalidDataException(
-                    f"Input data has wrong 'Kind' for {self.__class__.__name__}"
+                    f"Input data has wrong 'Kind' for {self.__class__.__name__} "
+                    f"- Expected: '{self._expected_kind}', Actual: '{self._kind}'"
                 )
 
     def __repr__(self):
@@ -69,11 +70,7 @@ class K8sObject(K8sSerializable):
         if not hasattr(other, "is_namespaced") or self._is_namespaced != other.is_namespaced:
             return False
         if self._is_namespaced:
-            return (
-                self._kind == other.kind
-                and self.name == other.name
-                and self.namespace == other.namespace
-            )
+            return self._kind == other.kind and self.name == other.name and self.namespace == other.namespace
         return self._kind == other.kind and self.name == other.name
 
     @property
@@ -93,6 +90,16 @@ class K8sObject(K8sSerializable):
     @property
     def status(self) -> K8sObjectStatus:
         return self._status.copy()
+
+    # ==== (De)Serialization
+
+    @classmethod
+    def from_model(cls, model) -> t.Self:
+        model_dict = serialization.sanitize_for_serialization(model)
+        return cls.from_dict(model_dict)
+
+    def to_model(self, model_cls: t.Type):
+        return serialization.to_k8s_model(model_cls=model_cls, obj_data=self._deserialized)
 
     # ==== Metadata
 

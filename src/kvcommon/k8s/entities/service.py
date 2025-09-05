@@ -19,6 +19,9 @@ class ServiceLoadBalancer(IngressLoadBalancer):
     pass
 
 
+# TODO: un-snake-case all attrs and use super().from_model() + super().to_model() (See: Deployment)
+
+
 class Status_Service(K8sObjectStatus):
     @property
     def status_load_balancers(self) -> list[ServiceLoadBalancer]:

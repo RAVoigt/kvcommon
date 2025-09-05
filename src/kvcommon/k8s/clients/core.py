@@ -1,3 +1,5 @@
+import typing as t
+
 from kubernetes.client import CoreV1Api
 from kubernetes.client.exceptions import ApiException
 from kubernetes.client.models.v1_secret import V1Secret
@@ -13,6 +15,9 @@ from .base import K8sClientBase
 from kvcommon.logger import get_logger
 
 LOG = get_logger("kvc-k8s")
+
+
+# TODO: Versioning in names
 
 
 class K8sCoreClient(K8sClientBase[CoreV1Api]):

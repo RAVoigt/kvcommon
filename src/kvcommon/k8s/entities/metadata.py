@@ -14,7 +14,16 @@ from kvcommon.logger import get_logger
 LOG = get_logger("kvc-k8s")
 
 
+# TODO: un-snake-case all attrs and use super().from_model() + super().to_model() (See: Deployment)
+
+
 class Metadata(K8sSerializable):
+    _annotations: dict
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._initialize_dict_values(["annotations", "labels"])
+        self._initialize_list_values(["finalizers", "managed_fields"])
 
     def get(self, metadata_key: str, default: t.Any = None) -> str | dict | list | None:
         value = self._deserialized.get(metadata_key, default)
@@ -27,6 +36,20 @@ class Metadata(K8sSerializable):
 
     def __repr__(self):
         return f"<Metadata: ns:'{self.namespace}' | name:'{self.name}'"
+
+    def _get_dict_value(self, key: str) -> dict:
+        # TODO: Move to K8sSerializable?
+        value = self._deserialized.get(key)
+        if isinstance(value, dict):
+            return value
+        raise ValueError(f"dict not initialized: '{key}'")
+
+    def _get_list_value(self, key: str) -> list:
+        # TODO: Move to K8sSerializable?
+        value = self._deserialized.get(key)
+        if isinstance(value, list):
+            return value
+        raise ValueError(f"list not initialized: '{key}'")
 
     @classmethod
     def from_model(cls, model: V1ObjectMeta) -> t.Self:
@@ -47,9 +70,13 @@ class Metadata(K8sSerializable):
     def uid(self) -> str:
         return self._get_essential_str("uid")
 
+
     @property
     def annotations(self) -> dict:
-        return self._deserialized.get("annotations", {})
+        return self._get_dict_value("annotations")
+
+    def set_annotation(self, annotation_key: str, new_value: str|int|dict):
+        self.annotations[annotation_key] = new_value
 
     @property
     def creation_timestamp(self) -> datetime | None:
@@ -61,12 +88,12 @@ class Metadata(K8sSerializable):
 
     @property
     def labels(self) -> dict:
-        return self._deserialized.get("labels", {})
+        return self._get_dict_value("labels")
 
     @property
     def finalizers(self) -> list[str]:
-        return self._deserialized.get("finalizers", {})
+        return self._get_list_value("finalizers")
 
     @property
     def managed_fields(self) -> list[dict]:
-        return self._deserialized.get("managed_fields", {})
+        return self._get_list_value("managed_fields")

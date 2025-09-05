@@ -16,6 +16,9 @@ from kvcommon.logger import get_logger
 LOG = get_logger("kvc-k8s")
 
 
+# TODO: un-snake-case all attrs and use super().from_model() + super().to_model() (See: Deployment)
+
+
 class IngressBackend_Resource(K8sSerializable):
     # https://kubernetes.io/docs/concepts/services-networking/ingress/#resource-backend
 

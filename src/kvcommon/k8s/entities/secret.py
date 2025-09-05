@@ -16,6 +16,9 @@ from kvcommon.logger import get_logger
 LOG = get_logger("kvc-k8s")
 
 
+# TODO: un-snake-case all attrs and use super().from_model() + super().to_model() (See: Deployment)
+
+
 class Secret(K8sObject):
     _expected_kind = "Secret"
     _spec: None

@@ -4,6 +4,9 @@ import typing as t
 from .serializable import K8sSerializable
 
 
+# TODO: un-snake-case all attrs and use super().from_model() + super().to_model() (See: Deployment)
+
+
 class IAMBinding(K8sSerializable):
     def __repr__(self):
         return f"<{self.__class__.__name__}: role:'{self.role}' | members:'{self.members}'"

@@ -12,6 +12,10 @@ from kvcommon.logger import get_logger
 LOG = get_logger("kvc-k8s")
 
 
+# TODO: Clarify this as a GCP-specific object (GCE CRDs)
+# TODO: un-snake-case all attrs and use super().from_model() + super().to_model() (See: Deployment)
+
+
 class Spec_BackendConfig_IAP(K8sSerializable):
     @property
     def enabled(self) -> bool:
@@ -19,7 +23,7 @@ class Spec_BackendConfig_IAP(K8sSerializable):
 
     @property
     def oauthclientCredentials(self) -> dict:
-        return self._deserialized.get("oauthclientCredentials", None)
+        return self._deserialized.get("oauthclientCredentials")
 
     @property
     def oauthclientCredentials_secretName(self) -> str | None:
@@ -28,32 +32,32 @@ class Spec_BackendConfig_IAP(K8sSerializable):
 
 class Spec_BackendConfig_HealthCheck(K8sSerializable):
     @property
-    def checkIntervalSec(self) -> int | None:
-        return self._deserialized.get("checkIntervalSec", None)
+    def checkIntervalSec(self) -> int:
+        return self._deserialized.get("checkIntervalSec")
 
     @property
-    def timeoutSec(self) -> int | None:
-        return self._deserialized.get("timeoutSec", None)
+    def timeoutSec(self) -> int:
+        return self._deserialized.get("timeoutSec")
 
     @property
-    def healthyThreshold(self) -> int | None:
-        return self._deserialized.get("healthyThreshold", None)
+    def healthyThreshold(self) -> int:
+        return self._deserialized.get("healthyThreshold")
 
     @property
-    def unhealthyThreshold(self) -> int | None:
-        return self._deserialized.get("unhealthyThreshold", None)
+    def unhealthyThreshold(self) -> int:
+        return self._deserialized.get("unhealthyThreshold")
 
     @property
-    def type(self) -> str | None:
-        return self._deserialized.get("type", None)
+    def type(self) -> str:
+        return self._deserialized.get("type")
 
     @property
-    def requestPath(self) -> str | None:
-        return self._deserialized.get("requestPath", None)
+    def requestPath(self) -> str:
+        return self._deserialized.get("requestPath")
 
     @property
-    def port(self) -> int | None:
-        port = self._deserialized.get("port", None)
+    def port(self) -> int:
+        port = self._deserialized.get("port")
         if port is not None:
             return int(port)
 
