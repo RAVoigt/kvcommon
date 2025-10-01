@@ -72,3 +72,5 @@ def is_json(value: t.Any, try_decode: bool = False) -> bool:
         json.loads(value)
     except json.JSONDecodeError:
         return False
+
+    return True
