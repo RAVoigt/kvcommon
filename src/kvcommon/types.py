@@ -1,5 +1,11 @@
+import inspect
 import json
+import os
+import pathlib
 import typing as t
+
+
+PathLike = os.PathLike | str | pathlib.Path
 
 
 def to_bool(val: None | bool | int | float | str) -> bool:
@@ -74,3 +80,6 @@ def is_json(value: t.Any, try_decode: bool = False) -> bool:
         return False
 
     return True
+
+def is_function_async(func: t.Callable | t.Coroutine) -> bool:
+    return inspect.isfunction(func) and inspect.iscoroutinefunction(func)
