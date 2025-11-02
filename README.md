@@ -18,6 +18,7 @@ https://pypi.org/project/kvcommon/
 
 | Package | Description | Example Usage |
 |---|---|---|
+|`asynchronous`|Various utils for easing use of asyncio stuff + a coroutine/thread-based async job scheduler|#TODO|
 |`datastore`|An abstraction for a simple dictionary-based key-value datastore with support for schema versions and files as 'backends' (TOML, YAML, etc.)|#TODO|
 |`k8s`|Utils to reduce boilerplate when working with Kubernetes and GKE in Python|`from kvcommon.k8s import K8sAppsClient; K8sAppsClient().rollout_restart_deployment("some_namespace", "some_name")`|
 |`logger`|Boilerplate wrapper to get logger with formatting|`from kvcommon import logger as LOG; LOG.get_logger("logger_name")`|
