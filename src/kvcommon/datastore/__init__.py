@@ -1,16 +1,18 @@
-import typing as t
-from .base import VersionedDatastore
-from .backend import DictBackend
-
-
-class InMemoryDatastore(VersionedDatastore):
-    _backend: DictBackend
-
-    def __init__(self, config_version: int) -> None:
-        super().__init__(DictBackend(), config_version)
+from .backend import DatastoreBackend
+from .base import create_datastore
+from .base import Datastore
+from .ds_toml import create_toml_datastore
+from .ds_toml import TOMLBackend
+from .ds_yaml import create_yaml_datastore
+from .ds_yaml import YAMLBackend
 
 
 __all__ = [
-    "VersionedDatastore",
-    "InMemoryDatastore",
+    "create_datastore",
+    "create_toml_datastore",
+    "create_yaml_datastore",
+    "Datastore",
+    "DatastoreBackend",
+    "TOMLBackend",
+    "YAMLBackend",
 ]

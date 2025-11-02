@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kvcommon"
-version = "0.4.8"
+version = "0.5.0"
 description = "Library of miscellaneous common python utils that aren't worthy of their own dedicated libs."
 authors = ["Rob Voigt <code@ravoigt.com>"]
 readme = "README.md"
@@ -34,6 +34,9 @@ toml = "^0.10.2"
 kubernetes = { version = "^31.0.0", optional = true }
 
 
+# valkey
+valkey = {extras = ["libvalkey"], version = "^6.1.1", optional = true }
+
 # prometheus
 prometheus-client = {version = "^0.20.0", optional = true }
 
@@ -59,3 +62,4 @@ pyfakefs = "*"
 [tool.poetry.extras]
 k8s = ["kubernetes"]
 prometheus = ["prometheus-client"]
+valkey = ["valkey"]

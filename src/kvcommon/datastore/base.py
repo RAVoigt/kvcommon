@@ -9,7 +9,7 @@ from .backend import DatastoreBackend
 LOG = logger.get_logger("kvc-ds")
 
 
-class VersionedDatastore(object):
+class Datastore(object):
     """
     Versioned Datastore
 
@@ -18,16 +18,23 @@ class VersionedDatastore(object):
 
     _config_version: int
     _version_key = "_data_version"
+    _backend_cls: t.Type = DatastoreBackend
     _backend: DatastoreBackend
 
     def __init__(
-        self, backend: DatastoreBackend | t.Type[DatastoreBackend], config_version: int
+        self,
+        config_version: int,
+        backend: DatastoreBackend | t.Type[DatastoreBackend] | None = None,
     ) -> None:
         self._config_version = config_version
+
         if isinstance(backend, DatastoreBackend):
             self._backend = backend
         elif isinstance(backend, type(DatastoreBackend)):
+            self._backend_cls = backend
             self._backend = backend()
+        else:
+            self._backend = self._backend_cls()
 
         if not self.check_version_match():
             self._migrate_version()
@@ -55,8 +62,8 @@ class VersionedDatastore(object):
             raise TypeError(f"Non-int value retrieved for config_version: {value}")
         return value
 
-    def get_value(self, key, default=None, by_ref=False) -> t.Any:
-        return self._backend.get(key, default=default, by_ref=by_ref)
+    def get_value(self, key, default=None) -> t.Any:
+        return self._backend.get(key, default=default)
 
     def set_value(self, key, value):
         return self._backend.set(key, value)
@@ -76,3 +83,11 @@ class VersionedDatastore(object):
     def update_data(self, **overrides: dict) -> None:
         return self._backend.update_data(**overrides)
 
+
+def create_datastore(config_version: int, backend: DatastoreBackend | None = None) -> Datastore:
+    """
+    Create a simple in-memory, dict-backed datastore.
+    Not particularly useful in and of itself, but shares interface and convenience funcs
+    with other Datastores
+    """
+    return Datastore(config_version, backend=backend)
