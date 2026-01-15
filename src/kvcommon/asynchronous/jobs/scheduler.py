@@ -61,8 +61,7 @@ class JobScheduler:
         self._error_poller.pause("Startup")
         self.add_job(self._error_poller)
 
-        if not event_loop:
-            self._event_loop = get_or_create_loop(add_handlers=True, logger=LOG)
+        self._event_loop = get_or_create_loop(add_handlers=True, logger=LOG, adopt_loop=event_loop)
 
         self._normal_log_level = log_level
         self.toggle_debug_mode(debug_mode)

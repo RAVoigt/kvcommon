@@ -43,10 +43,10 @@ def _add_signal_handlers_to_loop(loop: LoopType, logger: logging.Logger = LOG):
         logger.warning("Signal handlers not supported on this platform.")
 
 
-def get_or_create_loop(add_handlers: bool = True, logger: logging.Logger = LOG) -> LoopType:
+def get_or_create_loop(add_handlers: bool = True, logger: logging.Logger = LOG, adopt_loop: LoopType | None = None) -> LoopType:
     try:
         # Try to get pre-existing thread-local event loop
-        loop = asyncio.get_event_loop()
+        loop = adopt_loop or asyncio.get_event_loop()
         if loop.is_closed():
             raise RuntimeError("Loop is closed")
 
