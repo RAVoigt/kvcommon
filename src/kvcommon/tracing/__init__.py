@@ -12,16 +12,31 @@ def _unwrap_function(func) -> t.Callable:
     return func
 
 
-def auto_trace_span(name=None):
-    def decorator(func):
-        # Extract the real raw function so we can safely read __module__ and __name__
+def auto_trace_span(name_or_func=None):
+    # Used without parentheses: '@auto_trace_span'
+    if callable(name_or_func):
+        func = name_or_func
         raw_func = _unwrap_function(func)
 
         module_name = raw_func.__module__
         tracer = trace.get_tracer(module_name)
-        span_name = name or raw_func.__name__
+        span_name = raw_func.__name__
 
-        # If it's a property, we must wrap the getter execution
+        @wraps(raw_func)
+        def wrapper(*args, **kwargs):
+            with tracer.start_as_current_span(span_name):
+                return raw_func(*args, **kwargs)
+        return wrapper
+
+    # Used with parentheses '@auto_trace_span()' or '@auto_span("custom_name")'
+    def decorator(func):
+        raw_func = _unwrap_function(func)
+        module_name = raw_func.__module__
+        tracer = trace.get_tracer(module_name)
+
+        span_name = name_or_func if isinstance(name_or_func, str) else raw_func.__name__
+
+        # Handle property descriptor wrapping
         if isinstance(func, property):
             @wraps(raw_func)
             def property_wrapper(*args, **kwargs):
@@ -29,7 +44,6 @@ def auto_trace_span(name=None):
                     return raw_func(*args, **kwargs)
             return property(property_wrapper)
 
-        # For staticmethod, classmethod, or normal functions
         @wraps(raw_func)
         def wrapper(*args, **kwargs):
             with tracer.start_as_current_span(span_name):
@@ -41,4 +55,5 @@ def auto_trace_span(name=None):
             return classmethod(wrapper)
 
         return wrapper
+
     return decorator
