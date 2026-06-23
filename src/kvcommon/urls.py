@@ -1,13 +1,7 @@
 import typing as t
 from urllib.parse import urlparse
 from urllib.parse import ParseResult
-
-def coerce_parseresult(url: str | ParseResult) -> ParseResult:
-    if isinstance(url, ParseResult):
-        return url
-    if isinstance(url, str):
-        return urlparse(url)
-    raise TypeError("url must be str or ParseResult")
+from urllib.parse import quote
 
 
 def urlparse_ignore_scheme(
@@ -57,6 +51,16 @@ def urlparse_ignore_scheme(
     )
 
 
+def coerce_parseresult(url: str | ParseResult, ignore_scheme: bool = False) -> ParseResult:
+    if isinstance(url, ParseResult):
+        return url
+    if isinstance(url, str):
+        if ignore_scheme:
+            return urlparse_ignore_scheme(url)
+        return urlparse(url)
+    raise TypeError("url must be str or ParseResult")
+
+
 def get_netloc_without_port_from_url_parts(url_parts: ParseResult) -> str:
     # urlparse sadly doesn't provide an easy way to remove/replace the port in netloc
     netloc = url_parts.netloc
@@ -64,3 +68,35 @@ def get_netloc_without_port_from_url_parts(url_parts: ParseResult) -> str:
     if netloc.endswith(port_str):
         netloc = netloc[: len(netloc) - len(port_str)]
     return netloc
+
+
+def asgi_scope_to_parse_result(scope) -> ParseResult:
+    scheme = scope.get("scheme", "http")
+    headers = dict(scope.get("headers", []))
+
+    # Netloc (host:port)
+    if b"host" in headers:
+        netloc = headers[b"host"].decode("latin-1")
+    else:
+        server = scope.get("server")
+        if server:
+            host, port = server
+            if (scheme == "http" and port == 80) or (scheme == "https" and port == 443):
+                netloc = host
+            else:
+                netloc = f"{host}:{port}"
+        else:
+            netloc = "localhost"
+
+    # Path
+    path = scope.get("root_path", "") + scope.get("path", "")
+    path = quote(path)
+
+    params = ""
+
+    query = scope.get("query_string", b"").decode("utf-8")
+
+    # Fragment (ASGI servers strip fragments before hitting the app, always empty)
+    fragment = ""
+
+    return ParseResult(scheme, netloc, path, params, query, fragment)
