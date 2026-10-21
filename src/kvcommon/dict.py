@@ -29,6 +29,14 @@ def _try_get(
 def get_nested_value(
     data: dict, nested_key_path: str, default: t.Any = NO_DEFAULT, fail_silently: bool = False
 ) -> t.Any:
+    """
+    Get a key:value pair using a dot-separated path string
+
+    params:
+        nested_key_path: str : dot-separated path (e.g.; "first_level.second_level.some_value")
+        default: Any
+        fail_silently: bool: If True, KeyError is not raised when attempting to access a non-existing value at any nesting level
+    """
     path_segments: list[str] = nested_key_path.split(".")
     if len(path_segments) < 1:
         raise KeyError(
